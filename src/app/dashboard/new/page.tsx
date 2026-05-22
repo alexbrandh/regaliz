@@ -38,6 +38,7 @@ import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useMindARBrowserCompiler, preloadMindARCompiler } from '@/hooks/useMindARBrowserCompiler';
 import { useVideoConverter, needsConversion } from '@/hooks/useVideoConverter';
 import { logger } from '@/lib/logger';
+import { addQRCodeToImageFile, buildArExperienceUrl } from '@/lib/qr-overlay';
 
 interface FileWithPreview {
   file: File;
@@ -557,6 +558,31 @@ export default function NewPostcard() {
 
       currentPostcardIdRef.current = postcard.postcard.id;
 
+      let imageFileToUpload = imageFile.file;
+      try {
+        const arUrl = buildArExperienceUrl(postcard.postcard.id);
+        const stampedImage = await addQRCodeToImageFile(imageFile.file, arUrl);
+        imageFileToUpload = stampedImage;
+        const stampedPreview = URL.createObjectURL(stampedImage);
+        URL.revokeObjectURL(imageFile.preview);
+        setImageFile({
+          file: stampedImage,
+          preview: stampedPreview,
+          type: 'image',
+          metadata: imageFile.metadata,
+        });
+        logger.info('QR de experiencia añadido a la imagen', {
+          postcardId: postcard.postcard.id,
+          operation: 'image_qr_overlay',
+          metadata: { originalSize: imageFile.file.size, stampedSize: stampedImage.size },
+        });
+      } catch (qrError) {
+        logger.error('No se pudo añadir el QR a la imagen, se subirá la original', {
+          postcardId: postcard.postcard.id,
+          operation: 'image_qr_overlay_failed',
+        }, qrError instanceof Error ? qrError : new Error(String(qrError)));
+      }
+
       setCurrentStep('uploading-image');
       updateOverallProgress('uploading-image');
 
@@ -567,7 +593,7 @@ export default function NewPostcard() {
 
       videoUploadPromiseRef.current = uploadFile(finalVideoFile, postcard.videoUploadUrl, { uploadId: videoUploadId });
 
-      await uploadFile(imageFile.file, postcard.imageUploadUrl, { uploadId: imageUploadId, skipValidation: true });
+      await uploadFile(imageFileToUpload, postcard.imageUploadUrl, { uploadId: imageUploadId, skipValidation: true });
 
       setImageUploaded(true);
 
