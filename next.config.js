@@ -15,6 +15,7 @@ const nextConfig = {
   turbopack: {},
 
   headers: async () => {
+    const isProd = process.env.NODE_ENV === 'production';
     return [
       {
         // AR viewer needs cross-origin resources (MindAR CDN, A-Frame)
@@ -31,13 +32,15 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' },
         ],
       },
-      {
-        // Long cache for static assets served from /_next/static
-        source: '/_next/static/(.*)',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
-      },
+      // Long-cache static assets only in production; in dev we want fresh chunks
+      ...(isProd
+        ? [{
+            source: '/_next/static/(.*)',
+            headers: [
+              { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+            ],
+          }]
+        : []),
     ];
   },
 

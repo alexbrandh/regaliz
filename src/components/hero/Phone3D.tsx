@@ -16,8 +16,15 @@ export default function Phone3D({ scrollProgress, isMobile }: Props) {
       aria-hidden="true"
       className="absolute inset-0"
       dpr={[1, 2]}
-      gl={{ antialias: true, alpha: true }}
+      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       style={{ background: 'transparent' }}
+      onCreated={({ gl }) => {
+        gl.domElement.addEventListener(
+          'webglcontextlost',
+          (e) => e.preventDefault(),
+          false
+        );
+      }}
     >
       <PerspectiveCamera
         makeDefault
