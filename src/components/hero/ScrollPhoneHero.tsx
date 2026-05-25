@@ -66,7 +66,7 @@ export function ScrollPhoneHero() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full bg-linear-to-b from-background via-background to-muted/20"
+      className="relative -mt-16 w-full bg-linear-to-b from-background via-background to-muted/20"
       style={{ height: sectionHeight }}
       aria-label="Hero"
     >
