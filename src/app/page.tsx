@@ -2,7 +2,7 @@
 
 import { Camera, Share2, Zap, ArrowRight } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
-import { AnimatedHero } from '@/components/ui/animated-hero';
+import { ScrollPhoneHero } from '@/components/hero/ScrollPhoneHero';
 import { motion } from 'framer-motion';
 
 const steps = [
@@ -38,7 +38,7 @@ export default function Home() {
       <div className="min-h-screen">
 
         {/* Animated Hero Section */}
-        <AnimatedHero />
+        <ScrollPhoneHero />
 
         {/* Features Section */}
         <section id="features" className="relative py-24 overflow-hidden">
