@@ -87,13 +87,15 @@ export function PhoneModel({ scrollProgress, isMobile }: Props) {
   }, [cloned, texture]);
 
   // Pose final and start poses
-  const finalScale = isMobile ? 0.85 : 1.0;
+  // Smaller final size so the phone reads as an object in the scene
+  // rather than dominating the viewport (matches the Cleo reference).
+  const finalScale = isMobile ? 0.7 : 0.72;
   // startScale must be large enough that the phone's screen overflows the
   // viewport — user sees only the video content, no bezels. Desktop needs
   // a much larger factor because the viewport is landscape vs the portrait
   // screen; mobile aspect ratios are closer, so a smaller multiplier works.
   const startScale = isMobile ? 3.5 : 6.0;
-  const finalY = isMobile ? 0.25 : 0.45;
+  const finalY = isMobile ? 0.2 : 0.35;
 
   useFrame(({ clock }) => {
     const g = groupRef.current;
@@ -105,10 +107,11 @@ export function PhoneModel({ scrollProgress, isMobile }: Props) {
     const sizeFactor = lerp(startScale, finalScale, zoom);
     const scale = sizeFactor * canonicalScale;
 
-    // Rotation: faces forward during zoom; slight tilt once settled (0.75 → 0.90)
-    const tiltT = smoothstep(p, 0.75, 0.9);
-    const rotX = -0.06 * tiltT;
-    const rotY = -0.08 * tiltT;
+    // Rotation: faces forward during zoom; pronounced tilt once settled
+    // (0.70 → 0.90) — ~-9.7° on Y and ~-4.6° on X, like the Cleo reference.
+    const tiltT = smoothstep(p, 0.7, 0.9);
+    const rotX = -0.08 * tiltT;
+    const rotY = -0.17 * tiltT;
 
     // Position: stays centered while zooming out, then settles to finalY
     const baseY = lerp(0, finalY, zoom);
