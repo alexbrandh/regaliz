@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion';
 import { Camera, ArrowDown } from 'lucide-react';
 import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
@@ -48,20 +48,20 @@ export function ScrollPhoneHero() {
     offset: ['start start', 'end end'],
   });
 
-  // Titular: scale 1 → 0.55, y 0 → -38vh (en 0.10 → 0.55)
-  const titleScale = useTransform(scrollYProgress, [0.1, 0.55], [1, 0.55]);
-  const titleY = useTransform(scrollYProgress, [0.1, 0.55], ['0vh', '-38vh']);
+  // Title: opacity 1 → 0 and slight rise in 0.15 → 0.40 (no scale)
+  const titleOpacity = useTransform(scrollYProgress, [0.15, 0.4], [1, 0]);
+  const titleY = useTransform(scrollYProgress, [0.15, 0.4], ['0vh', '-15vh']);
 
-  // Subtítulo: opacity 0 → 1, y +20 → 0 (en 0.55 → 0.80)
-  const subOpacity = useTransform(scrollYProgress, [0.55, 0.8], [0, 1]);
-  const subY = useTransform(scrollYProgress, [0.55, 0.8], [20, 0]);
+  // Subtitle + CTAs share one transform block — fade-in with blur 0.75 → 0.90
+  const subOpacity = useTransform(scrollYProgress, [0.75, 0.9], [0, 1]);
+  const subY = useTransform(scrollYProgress, [0.75, 0.9], [20, 0]);
+  const subBlurPx = useTransform(scrollYProgress, [0.75, 0.9], [8, 0]);
+  const subFilter = useMotionTemplate`blur(${subBlurPx}px)`;
 
-  // CTAs: opacity 0 → 1, y +20 → 0 (en 0.80 → 1.00)
-  const ctaOpacity = useTransform(scrollYProgress, [0.8, 1], [0, 1]);
-  const ctaY = useTransform(scrollYProgress, [0.8, 1], [20, 0]);
-
-  // Mobile: 150vh; desktop: 200vh; reduced motion: 100vh (sin scroll)
-  const sectionHeight = reducedMotion ? '100vh' : isMobile ? '150vh' : '200vh';
+  // Mobile: 180vh; desktop: 240vh; reduced motion: 100vh (no scroll story).
+  // Desktop has 40vh / mobile 30vh of "rest buffer" mapped to 0.90 → 1.00 so
+  // the CTAs sit fully visible before HowItWorksSection's -mt-20 overlap.
+  const sectionHeight = reducedMotion ? '100vh' : isMobile ? '180vh' : '240vh';
 
   return (
     <section
@@ -70,45 +70,52 @@ export function ScrollPhoneHero() {
       style={{ height: sectionHeight }}
       aria-label="Hero"
     >
-      <div className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden">
-        {/* Canvas 3D detrás */}
-        <div className="absolute inset-0">
-          {!reducedMotion && (
-            <Phone3D scrollProgress={scrollYProgress} isMobile={isMobile} />
-          )}
-          {reducedMotion && <PhoneSkeleton />}
-        </div>
+      <div className="sticky top-0 flex h-screen w-full flex-col overflow-hidden">
+        {/* Top region: phone canvas + overlaid title */}
+        <div className="relative flex-1 min-h-0">
+          <div className="absolute inset-0">
+            {!reducedMotion && (
+              <Phone3D scrollProgress={scrollYProgress} isMobile={isMobile} />
+            )}
+            {reducedMotion && <PhoneSkeleton />}
+          </div>
 
-        {/* Overlay: titular */}
-        <motion.h1
-          className="relative z-10 px-4 text-center font-bold tracking-tighter text-foreground text-[clamp(2.25rem,12vw,4rem)] md:text-[clamp(3rem,11vw,7rem)] leading-[0.95]"
-          style={reducedMotion ? undefined : { scale: titleScale, y: titleY }}
-        >
-          Que tus fotos cobren vida
-          <span className="bg-linear-to-r from-primary to-ring bg-clip-text text-transparent">
-            .
-          </span>
-        </motion.h1>
-
-        {/* Overlay: subtítulo + CTAs (debajo) */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-12 z-10 flex flex-col items-center gap-6 px-4">
-          <motion.p
-            className="max-w-2xl text-center text-base md:text-lg leading-relaxed text-muted-foreground"
+          <motion.h1
+            className="absolute inset-x-0 top-[18vh] z-10 px-4 text-center font-bold tracking-tighter text-foreground text-[clamp(2rem,7vw,4.5rem)] leading-[0.95]"
             style={
-              reducedMotion ? { opacity: 1 } : { opacity: subOpacity, y: subY }
+              reducedMotion
+                ? undefined
+                : { opacity: titleOpacity, y: titleY, pointerEvents: 'none' }
             }
           >
+            Que tus fotos cobren vida
+            <span className="bg-linear-to-r from-primary to-ring bg-clip-text text-transparent">
+              .
+            </span>
+          </motion.h1>
+        </div>
+
+        {/* Bottom region: subtitle + CTAs, guaranteed space above HowItWorks overlap */}
+        <motion.div
+          className="relative z-10 flex flex-col items-center gap-5 px-4 pb-28 md:pb-32"
+          style={
+            reducedMotion
+              ? undefined
+              : {
+                  opacity: subOpacity,
+                  y: subY,
+                  filter: subFilter,
+                  WebkitFilter: subFilter,
+                }
+          }
+        >
+          <p className="max-w-2xl text-center text-base md:text-lg leading-relaxed text-muted-foreground">
             Transformá tus fotos en experiencias de realidad aumentada. Subí una
             imagen y un video, y compartí recuerdos que cobran vida cuando se
             ven a través de la cámara.
-          </motion.p>
+          </p>
 
-          <motion.div
-            className="pointer-events-auto flex flex-col sm:flex-row gap-3"
-            style={
-              reducedMotion ? { opacity: 1 } : { opacity: ctaOpacity, y: ctaY }
-            }
-          >
+          <div className="flex flex-col sm:flex-row gap-3">
             <SignedOut>
               <SignInButton mode="modal">
                 <Button size="lg" className="gap-2 text-lg px-8">
@@ -136,8 +143,8 @@ export function ScrollPhoneHero() {
                 Cómo funciona
               </a>
             </Button>
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
