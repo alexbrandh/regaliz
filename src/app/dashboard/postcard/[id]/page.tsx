@@ -294,19 +294,31 @@ export default function PostcardDetailPage() {
               {/* Imagen Target */}
               <div className="lg:col-span-5">
                 <MediaCard label="Imagen Target" icon={<ImageIcon className="h-4 w-4" />}>
-                  <div className="relative aspect-square bg-linear-to-br from-muted/40 to-muted/10">
+                  <div className="relative h-[380px] md:h-[440px] overflow-hidden">
                     {postcard.image_url && isValidImageUrl(postcard.image_url) ? (
-                      <Image
-                        src={postcard.image_url}
-                        alt={postcard.title || 'Imagen de la postal'}
-                        fill
-                        className="object-cover"
-                        onError={(e) =>
-                          handleImageError(postcard.image_url, e.target as HTMLImageElement)
-                        }
-                      />
+                      <>
+                        {/* Fondo blurreado de la propia imagen */}
+                        <Image
+                          src={postcard.image_url}
+                          alt=""
+                          fill
+                          aria-hidden="true"
+                          className="object-cover scale-110 blur-2xl opacity-40"
+                        />
+                        <div className="absolute inset-0 bg-black/20" />
+                        {/* Imagen real con aspect ratio respetado */}
+                        <Image
+                          src={postcard.image_url}
+                          alt={postcard.title || 'Imagen de la postal'}
+                          fill
+                          className="object-contain"
+                          onError={(e) =>
+                            handleImageError(postcard.image_url, e.target as HTMLImageElement)
+                          }
+                        />
+                      </>
                     ) : (
-                      <div className="flex items-center justify-center h-full">
+                      <div className="flex items-center justify-center h-full bg-muted/30">
                         <ImageIcon className="h-16 w-16 text-muted-foreground/40" />
                       </div>
                     )}
@@ -317,7 +329,7 @@ export default function PostcardDetailPage() {
               {/* Video AR */}
               <div className="lg:col-span-4">
                 <MediaCard label="Video AR" icon={<Video className="h-4 w-4" />}>
-                  <div className="relative aspect-square bg-black">
+                  <div className="relative h-[380px] md:h-[440px] bg-black overflow-hidden">
                     {postcard.video_url ? (
                       <>
                         <video
@@ -326,7 +338,7 @@ export default function PostcardDetailPage() {
                           playsInline
                           muted
                           crossOrigin="anonymous"
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-contain"
                         >
                           <source
                             src={videoSignedUrl || postcard.video_url}
@@ -335,12 +347,12 @@ export default function PostcardDetailPage() {
                           Tu navegador no soporta el elemento de video.
                         </video>
                         {videoUrlLoading && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/40 pointer-events-none">
                             <Loader2 className="h-6 w-6 animate-spin text-white" />
                           </div>
                         )}
                         {videoUrlError && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-destructive/20 p-4">
+                          <div className="absolute inset-0 flex items-center justify-center bg-destructive/20 p-4 pointer-events-none">
                             <p className="text-destructive text-sm text-center">
                               Error cargando video
                             </p>
