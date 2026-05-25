@@ -88,7 +88,7 @@ export function PhoneModel({ scrollProgress, isMobile }: Props) {
 
   // Pose final
   const finalScale = isMobile ? 0.7 : 1.0;
-  const finalY = 0.4; // slightly raised to leave room below for subtitle+CTAs
+  const finalY = 0; // bottom region (flex) reserves space below; no 3D shift needed
 
   useFrame(({ clock }) => {
     const g = groupRef.current;
