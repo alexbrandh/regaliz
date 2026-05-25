@@ -88,25 +88,36 @@ export function PhoneModel({ scrollProgress, isMobile }: Props) {
 
   // Pose final
   const finalScale = isMobile ? 0.7 : 1.0;
+  const finalY = 0.4; // slightly raised to leave room below for subtitle+CTAs
 
   useFrame(({ clock }) => {
     const g = groupRef.current;
     if (!g) return;
     const p = scrollProgress.get();
 
-    // 0.10 → 0.55: el celular crece, sube de y=-1.2 a y=0, rota de -28° a 0°
-    const entry = smoothstep(p, 0.1, 0.55);
-    const progress = lerp(0.35, 1.0, entry) * finalScale;
-    const scale = progress * canonicalScale;
-    const rotY = lerp(-0.49, 0, entry);
-    const baseY = lerp(-1.2, 0, entry);
+    // Entry: 0.15 → 0.45 — phone enters and grows from 0 to 0.85 of finalScale
+    const entry = smoothstep(p, 0.15, 0.45);
+    // Settle: 0.45 → 0.75 — finishes growing from 0.85 to 1.0 of finalScale
+    const settle = smoothstep(p, 0.45, 0.75);
+    const sizeFactor = lerp(0, 0.85, entry) + lerp(0, 0.15, settle);
+    const scale = sizeFactor * finalScale * canonicalScale;
 
-    // Flotación solo en pose final (p > 0.55)
+    // Rotation: entry rotates from -28° to 0°; rest phase adds slight tilt
+    const entryRotY = lerp(-0.49, 0, entry);
+    const tiltT = smoothstep(p, 0.75, 0.9);
+    const restRotX = -0.06 * tiltT;
+    const restRotY = -0.08 * tiltT;
+
+    // Position: enters from y=-1.2, settles to y=finalY
+    const baseY = lerp(-1.2, finalY, entry);
+
+    // Floating only in rest phase
     const floatAmp = smoothstep(p, 0.55, 0.8) * 0.06;
     const floatY = Math.sin(clock.getElapsedTime() * 1.5) * floatAmp;
 
     g.scale.setScalar(scale);
-    g.rotation.y = rotY;
+    g.rotation.x = restRotX;
+    g.rotation.y = entryRotY + restRotY;
     g.position.y = baseY + floatY;
   });
 
