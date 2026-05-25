@@ -82,6 +82,7 @@ export function HowItWorksSection() {
       ref={sectionRef}
       className="relative z-10 -mt-12 md:-mt-20 bg-card text-card-foreground rounded-t-[2.5rem] md:rounded-t-[4rem] shadow-2xl shadow-black/10"
     >
+      <div className="h-12 md:h-20" aria-hidden />
       {/* Header */}
       <div className="container mx-auto px-4 pt-24 pb-8 md:pt-32 md:pb-16 text-center">
         <motion.span
