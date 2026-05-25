@@ -28,8 +28,8 @@ export default function Phone3D({ scrollProgress, isMobile }: Props) {
     >
       <PerspectiveCamera
         makeDefault
-        position={[0, 0, 6]}
-        fov={isMobile ? 38 : 30}
+        position={[0, 0, 7]}
+        fov={isMobile ? 38 : 28}
       />
       <ambientLight intensity={0.6} />
       <directionalLight position={[3, 4, 5]} intensity={1.2} />

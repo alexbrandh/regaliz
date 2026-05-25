@@ -86,38 +86,40 @@ export function PhoneModel({ scrollProgress, isMobile }: Props) {
     });
   }, [cloned, texture]);
 
-  // Pose final
-  const finalScale = isMobile ? 0.7 : 1.0;
-  const finalY = 0; // bottom region (flex) reserves space below; no 3D shift needed
+  // Pose final and start poses
+  const finalScale = isMobile ? 0.85 : 1.0;
+  // startScale must be large enough that the phone's screen overflows the
+  // viewport — user sees only the video content, no bezels. Desktop needs
+  // a much larger factor because the viewport is landscape vs the portrait
+  // screen; mobile aspect ratios are closer, so a smaller multiplier works.
+  const startScale = isMobile ? 3.5 : 6.0;
+  const finalY = isMobile ? 0.25 : 0.45;
 
   useFrame(({ clock }) => {
     const g = groupRef.current;
     if (!g) return;
     const p = scrollProgress.get();
 
-    // Entry: 0.15 → 0.45 — phone enters and grows from 0 to 0.85 of finalScale
-    const entry = smoothstep(p, 0.15, 0.45);
-    // Settle: 0.45 → 0.75 — finishes growing from 0.85 to 1.0 of finalScale
-    const settle = smoothstep(p, 0.45, 0.75);
-    const sizeFactor = lerp(0, 0.85, entry) + lerp(0, 0.15, settle);
-    const scale = sizeFactor * finalScale * canonicalScale;
+    // Zoom-out: 0 → 0.60 — phone shrinks from startScale to finalScale
+    const zoom = smoothstep(p, 0, 0.6);
+    const sizeFactor = lerp(startScale, finalScale, zoom);
+    const scale = sizeFactor * canonicalScale;
 
-    // Rotation: entry rotates from -28° to 0°; rest phase adds slight tilt
-    const entryRotY = lerp(-0.49, 0, entry);
+    // Rotation: faces forward during zoom; slight tilt once settled (0.75 → 0.90)
     const tiltT = smoothstep(p, 0.75, 0.9);
-    const restRotX = -0.06 * tiltT;
-    const restRotY = -0.08 * tiltT;
+    const rotX = -0.06 * tiltT;
+    const rotY = -0.08 * tiltT;
 
-    // Position: enters from y=-1.2, settles to y=finalY
-    const baseY = lerp(-1.2, finalY, entry);
+    // Position: stays centered while zooming out, then settles to finalY
+    const baseY = lerp(0, finalY, zoom);
 
-    // Floating only in rest phase
-    const floatAmp = smoothstep(p, 0.55, 0.8) * 0.06;
+    // Floating only after settle
+    const floatAmp = smoothstep(p, 0.7, 0.85) * 0.06;
     const floatY = Math.sin(clock.getElapsedTime() * 1.5) * floatAmp;
 
     g.scale.setScalar(scale);
-    g.rotation.x = restRotX;
-    g.rotation.y = entryRotY + restRotY;
+    g.rotation.x = rotX;
+    g.rotation.y = rotY;
     g.position.y = baseY + floatY;
   });
 

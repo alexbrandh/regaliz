@@ -70,34 +70,33 @@ export function ScrollPhoneHero() {
       style={{ height: sectionHeight }}
       aria-label="Hero"
     >
-      <div className="sticky top-0 flex h-screen w-full flex-col overflow-hidden">
-        {/* Top region: phone canvas + overlaid title */}
-        <div className="relative flex-1 min-h-0">
-          <div className="absolute inset-0">
-            {!reducedMotion && (
-              <Phone3D scrollProgress={scrollYProgress} isMobile={isMobile} />
-            )}
-            {reducedMotion && <PhoneSkeleton />}
-          </div>
-
-          <motion.h1
-            className="absolute inset-x-0 top-[18vh] z-10 px-4 text-center font-bold tracking-tighter text-foreground text-[clamp(2rem,7vw,4.5rem)] leading-[0.95]"
-            style={
-              reducedMotion
-                ? undefined
-                : { opacity: titleOpacity, y: titleY, pointerEvents: 'none' }
-            }
-          >
-            Que tus fotos cobren vida
-            <span className="bg-linear-to-r from-primary to-ring bg-clip-text text-transparent">
-              .
-            </span>
-          </motion.h1>
+      <div className="sticky top-0 h-screen w-full overflow-hidden">
+        {/* Phone canvas — fills full viewport so the zoom-out has room to breathe */}
+        <div className="absolute inset-0">
+          {!reducedMotion && (
+            <Phone3D scrollProgress={scrollYProgress} isMobile={isMobile} />
+          )}
+          {reducedMotion && <PhoneSkeleton />}
         </div>
 
-        {/* Bottom region: subtitle + CTAs, guaranteed space above HowItWorks overlap */}
+        {/* Title overlay — sits over the phone screen during the screen-fill phase */}
+        <motion.h1
+          className="absolute inset-x-0 top-[22vh] md:top-[28vh] z-10 px-4 text-center font-bold tracking-tighter text-white text-[clamp(2rem,7vw,4.5rem)] leading-[0.95] drop-shadow-[0_2px_24px_rgba(0,0,0,0.5)]"
+          style={
+            reducedMotion
+              ? undefined
+              : { opacity: titleOpacity, y: titleY, pointerEvents: 'none' }
+          }
+        >
+          Que tus fotos cobren vida
+          <span className="bg-linear-to-r from-primary to-ring bg-clip-text text-transparent">
+            .
+          </span>
+        </motion.h1>
+
+        {/* Subtitle + CTAs overlay — bottom area, clear of phone footprint */}
         <motion.div
-          className="relative z-10 flex flex-col items-center gap-5 px-4 pb-28 md:pb-32"
+          className="absolute inset-x-0 bottom-24 md:bottom-28 z-10 flex flex-col items-center gap-4 md:gap-5 px-4"
           style={
             reducedMotion
               ? undefined
@@ -109,7 +108,7 @@ export function ScrollPhoneHero() {
                 }
           }
         >
-          <p className="max-w-2xl text-center text-base md:text-lg leading-relaxed text-muted-foreground">
+          <p className="max-w-2xl text-center text-sm md:text-lg leading-relaxed text-muted-foreground">
             Transformá tus fotos en experiencias de realidad aumentada. Subí una
             imagen y un video, y compartí recuerdos que cobran vida cuando se
             ven a través de la cámara.
