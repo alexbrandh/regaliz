@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 export function HeroCTAs() {
   return (
     <section
-      className="relative w-full bg-background"
+      className="relative w-full"
       aria-label="Llamada a la acción del hero"
     >
       <div className="container mx-auto flex max-w-3xl flex-col items-center gap-6 px-4 py-16 md:py-24 text-center">
