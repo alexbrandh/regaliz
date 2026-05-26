@@ -2,11 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion';
-import { Camera, ArrowDown } from 'lucide-react';
-import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
-import { Button } from '@/components/ui/button';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { PhoneSkeleton } from './PhoneSkeleton';
 
 const Phone3D = dynamic(() => import('./Phone3D'), {
@@ -52,15 +48,7 @@ export function ScrollPhoneHero() {
   const titleOpacity = useTransform(scrollYProgress, [0.15, 0.4], [1, 0]);
   const titleY = useTransform(scrollYProgress, [0.15, 0.4], ['0vh', '-15vh']);
 
-  // Subtitle + CTAs share one transform block — fade-in with blur 0.75 → 0.90
-  const subOpacity = useTransform(scrollYProgress, [0.75, 0.9], [0, 1]);
-  const subY = useTransform(scrollYProgress, [0.75, 0.9], [20, 0]);
-  const subBlurPx = useTransform(scrollYProgress, [0.75, 0.9], [8, 0]);
-  const subFilter = useMotionTemplate`blur(${subBlurPx}px)`;
-
   // Mobile: 180vh; desktop: 240vh; reduced motion: 100vh (no scroll story).
-  // Desktop has 40vh / mobile 30vh of "rest buffer" mapped to 0.90 → 1.00 so
-  // the CTAs sit fully visible before HowItWorksSection's -mt-20 overlap.
   const sectionHeight = reducedMotion ? '100vh' : isMobile ? '180vh' : '240vh';
 
   return (
@@ -84,9 +72,7 @@ export function ScrollPhoneHero() {
           <motion.h1
             className="text-center font-bold tracking-tighter text-white text-[clamp(2rem,7vw,4.5rem)] leading-[0.95] drop-shadow-[0_2px_24px_rgba(0,0,0,0.5)]"
             style={
-              reducedMotion
-                ? undefined
-                : { opacity: titleOpacity, y: titleY }
+              reducedMotion ? undefined : { opacity: titleOpacity, y: titleY }
             }
           >
             Que tus fotos cobren vida
@@ -95,57 +81,6 @@ export function ScrollPhoneHero() {
             </span>
           </motion.h1>
         </div>
-
-        {/* Subtitle + CTAs overlay — bottom area, clear of phone footprint */}
-        <motion.div
-          className="absolute inset-x-0 bottom-24 md:bottom-28 z-10 flex flex-col items-center gap-4 md:gap-5 px-4"
-          style={
-            reducedMotion
-              ? undefined
-              : {
-                  opacity: subOpacity,
-                  y: subY,
-                  filter: subFilter,
-                  WebkitFilter: subFilter,
-                }
-          }
-        >
-          <p className="max-w-2xl text-center text-sm md:text-lg leading-relaxed text-muted-foreground">
-            Transformá tus fotos en experiencias de realidad aumentada. Subí una
-            imagen y un video, y compartí recuerdos que cobran vida cuando se
-            ven a través de la cámara.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-3">
-            <SignedOut>
-              <SignInButton mode="modal">
-                <Button size="lg" className="gap-2 text-lg px-8">
-                  <Camera className="h-5 w-5" />
-                  Comenzar Gratis
-                </Button>
-              </SignInButton>
-            </SignedOut>
-            <SignedIn>
-              <Link href="/dashboard/new">
-                <Button size="lg" className="gap-2 text-lg px-8">
-                  <Camera className="h-5 w-5" />
-                  Crear Postal AR
-                </Button>
-              </Link>
-            </SignedIn>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="gap-2 text-lg px-8"
-            >
-              <a href="#features">
-                <ArrowDown className="h-5 w-5" />
-                Cómo funciona
-              </a>
-            </Button>
-          </div>
-        </motion.div>
       </div>
     </section>
   );

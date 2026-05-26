@@ -87,17 +87,21 @@ export function PhoneModel({ scrollProgress, isMobile }: Props) {
   }, [cloned, texture]);
 
   // Pose final and start poses
-  // Compact final size — phone is centered in viewport with clear room
-  // below for the subtitle+CTA block (matches the Cleo reference).
-  const finalScale = isMobile ? 0.38 : 0.42;
+  // Phone fills ~80% of the viewport at rest. Subtitle + CTAs live in a
+  // separate section below the hero so we can use a generous final size
+  // without worrying about overlap.
+  // At z=7 fov=28 (desktop): visible vertical = 3.49 units. Phone canonical
+  // = 3 units, so scale 0.93 → phone height ~80% of viewport.
+  // At z=7 fov=38 (mobile): visible vertical = 4.82 units. Scale 1.25 →
+  // phone height ~78% of viewport.
+  const finalScale = isMobile ? 1.25 : 0.93;
   // startScale must be large enough that the phone's screen overflows the
   // viewport — user sees only the video content, no bezels. Desktop needs
   // a much larger factor because the viewport is landscape vs the portrait
   // screen; mobile aspect ratios are closer, so a smaller multiplier works.
   const startScale = isMobile ? 3.5 : 6.0;
-  // Essentially centered (tiny upward bias) so the phone reads as the
-  // visual centerpiece while still clearing the bottom CTA block.
-  const finalY = isMobile ? 0.03 : 0.05;
+  // Centered in the viewport.
+  const finalY = 0;
 
   useFrame(({ clock }) => {
     const g = groupRef.current;
