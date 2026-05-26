@@ -79,20 +79,22 @@ export function ScrollPhoneHero() {
           {reducedMotion && <PhoneSkeleton />}
         </div>
 
-        {/* Title overlay — sits over the phone screen during the screen-fill phase */}
-        <motion.h1
-          className="absolute inset-x-0 top-[22vh] md:top-[28vh] z-10 px-4 text-center font-bold tracking-tighter text-white text-[clamp(2rem,7vw,4.5rem)] leading-[0.95] drop-shadow-[0_2px_24px_rgba(0,0,0,0.5)]"
-          style={
-            reducedMotion
-              ? undefined
-              : { opacity: titleOpacity, y: titleY, pointerEvents: 'none' }
-          }
-        >
-          Que tus fotos cobren vida
-          <span className="bg-linear-to-r from-primary to-ring bg-clip-text text-transparent">
-            .
-          </span>
-        </motion.h1>
+        {/* Title overlay — vertically centered over the phone screen during the screen-fill phase */}
+        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-4">
+          <motion.h1
+            className="text-center font-bold tracking-tighter text-white text-[clamp(2rem,7vw,4.5rem)] leading-[0.95] drop-shadow-[0_2px_24px_rgba(0,0,0,0.5)]"
+            style={
+              reducedMotion
+                ? undefined
+                : { opacity: titleOpacity, y: titleY }
+            }
+          >
+            Que tus fotos cobren vida
+            <span className="bg-linear-to-r from-primary to-ring bg-clip-text text-transparent">
+              .
+            </span>
+          </motion.h1>
+        </div>
 
         {/* Subtitle + CTAs overlay — bottom area, clear of phone footprint */}
         <motion.div
