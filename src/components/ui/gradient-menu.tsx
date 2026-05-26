@@ -32,7 +32,7 @@ export default function GradientMenu({ className }: GradientMenuProps) {
   };
 
   return (
-    <nav className={`md:hidden fixed bottom-0 left-0 right-0 z-50 safe-area-bottom pointer-events-none ${className}`}>
+    <nav className={`fixed bottom-0 left-0 right-0 z-50 safe-area-bottom pointer-events-none ${className}`}>
       <div className="flex justify-center items-center py-10 sm:py-4 px-4 pointer-events-auto">
         <ul className="flex gap-2 sm:gap-3">
           {menuItems.map(({ title, icon, href, gradientFrom, gradientTo, requiresAuth }, idx) => {
