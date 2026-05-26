@@ -89,13 +89,15 @@ export function PhoneModel({ scrollProgress, isMobile }: Props) {
   // Pose final and start poses
   // Smaller final size so the phone reads as an object in the scene
   // rather than dominating the viewport (matches the Cleo reference).
-  const finalScale = isMobile ? 0.7 : 0.72;
+  const finalScale = isMobile ? 0.65 : 0.68;
   // startScale must be large enough that the phone's screen overflows the
   // viewport — user sees only the video content, no bezels. Desktop needs
   // a much larger factor because the viewport is landscape vs the portrait
   // screen; mobile aspect ratios are closer, so a smaller multiplier works.
   const startScale = isMobile ? 3.5 : 6.0;
-  const finalY = isMobile ? 0.2 : 0.35;
+  // Settled phone sits well above the CTA block so subtitle + buttons
+  // have clear vertical breathing room below the device.
+  const finalY = isMobile ? 0.45 : 0.6;
 
   useFrame(({ clock }) => {
     const g = groupRef.current;
