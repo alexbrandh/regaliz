@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { SharePostcard } from '@/components/SharePostcard';
-import { Clock, CheckCircle, AlertCircle, Trash2, XCircle, ImageIcon, ExternalLink } from 'lucide-react';
+import { Clock, CheckCircle, AlertCircle, Trash2, XCircle, ImageIcon, ExternalLink, Share2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ProcessingStatus } from '@/types/database';
 import type { Postcard } from '@/types/database';
@@ -133,7 +133,7 @@ const PostcardCard = memo(({ postcard, onDelete, onNavigate }: PostcardCardProps
               <div className="bg-white rounded-lg p-4 max-w-xs w-full mx-4">
                 <div className="flex items-center gap-2">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-                  <span className="text-sm font-medium">Procesando AR...</span>
+                  <span className="text-sm font-medium">Procesando realidad aumentada...</span>
                 </div>
               </div>
             </div>
@@ -168,9 +168,25 @@ const PostcardCard = memo(({ postcard, onDelete, onNavigate }: PostcardCardProps
                   className="flex items-center gap-1"
                 >
                   <ExternalLink className="h-3 w-3" />
-                  Ver AR
+                  Ver realidad aumentada
                 </Button>
-                <SharePostcard postcardId={postcard.id} title={postcard.title} />
+                {postcard.is_activated ? (
+                  <SharePostcard postcardId={postcard.id} title={postcard.title} />
+                ) : (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span>
+                        <Button variant="outline" size="sm" disabled className="flex items-center gap-1 opacity-60">
+                          <Share2 className="h-3 w-3" />
+                          Compartir
+                        </Button>
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Activa tu postal para poder compartirla</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
               </>
             )}
           </div>
