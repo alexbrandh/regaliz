@@ -143,8 +143,13 @@ export function HowItWorksSection() {
 
       {/* Mobile: sticky phone with overlaid fading text */}
       <div className="md:hidden relative h-[300svh]">
-        <div className="sticky top-0 flex h-svh flex-col items-center justify-center gap-6 px-5 pt-4 pb-8">
-          <div className="origin-center scale-[0.72] sm:scale-[0.82]">
+        <div
+          className="sticky top-0 flex h-svh flex-col items-center justify-center gap-4 px-5 pt-4"
+          style={{
+            paddingBottom: 'calc(9rem + env(safe-area-inset-bottom))',
+          }}
+        >
+          <div className="origin-center scale-[0.64] sm:scale-[0.78]">
             <PhoneMockup opacities={opacities} />
           </div>
           <div className="grid w-full max-w-md">
