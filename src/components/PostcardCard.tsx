@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { SharePostcard } from '@/components/SharePostcard';
+import { ActivationBadge } from '@/components/activation/ActivationBadge';
 import { Clock, CheckCircle, AlertCircle, Trash2, XCircle, ImageIcon, ExternalLink, Share2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ProcessingStatus } from '@/types/database';
@@ -88,22 +89,30 @@ const PostcardCard = memo(({ postcard, onDelete, onNavigate }: PostcardCardProps
               </CardDescription>
             )}
           </div>
-          <Badge 
-            className={`shrink-0 text-xs font-medium px-2.5 py-1 rounded-full ${
-              postcard.processing_status === 'ready' 
-                ? 'bg-emerald-500 text-white' 
-                : postcard.processing_status === 'processing'
-                ? 'bg-amber-500 text-white'
-                : postcard.processing_status === 'error'
-                ? 'bg-red-500 text-white'
-                : 'bg-orange-500 text-white'
-            }`}
-          >
-            <span className="flex items-center gap-1">
-              {getStatusIcon(postcard.processing_status)}
-              {getStatusText(postcard.processing_status)}
-            </span>
-          </Badge>
+          <div className="flex flex-col gap-1 items-end shrink-0">
+            <Badge
+              className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                postcard.processing_status === 'ready'
+                  ? 'bg-emerald-500 text-white'
+                  : postcard.processing_status === 'processing'
+                  ? 'bg-amber-500 text-white'
+                  : postcard.processing_status === 'error'
+                  ? 'bg-red-500 text-white'
+                  : 'bg-orange-500 text-white'
+              }`}
+            >
+              <span className="flex items-center gap-1">
+                {getStatusIcon(postcard.processing_status)}
+                {getStatusText(postcard.processing_status)}
+              </span>
+            </Badge>
+            {postcard.processing_status === 'ready' && (
+              <ActivationBadge
+                isActivated={!!postcard.is_activated}
+                fulfillmentType={postcard.fulfillment_type}
+              />
+            )}
+          </div>
         </div>
       </CardHeader>
       
