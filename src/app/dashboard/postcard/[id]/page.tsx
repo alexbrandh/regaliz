@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -31,6 +31,8 @@ import { Separator } from '@/components/ui/separator';
 import QRCode from 'qrcode';
 import { useSignedUrl } from '@/hooks/useSignedUrl';
 import { isValidImageUrl, handleImageError } from '@/lib/url-utils';
+import { ActivationCTA } from '@/components/activation/ActivationCTA';
+import { PostPurchaseSuccess } from '@/components/activation/PostPurchaseSuccess';
 
 type PostcardStatus = 'processing' | 'ready' | 'error' | 'needs_better_image';
 
@@ -44,6 +46,8 @@ interface Postcard {
   user_id?: string;
   status: PostcardStatus;
   created_at: string;
+  is_activated?: boolean;
+  fulfillment_type?: 'digital' | 'physical' | null;
 }
 
 const STATUS_TEXT: Record<PostcardStatus, string> = {
@@ -55,6 +59,8 @@ const STATUS_TEXT: Record<PostcardStatus, string> = {
 
 export default function PostcardDetailPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [postcard, setPostcard] = useState<Postcard | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -62,6 +68,23 @@ export default function PostcardDetailPage() {
   const [showQrDialog, setShowQrDialog] = useState(false);
 
   const postcardId = params?.id as string;
+
+  const justPaid = searchParams?.get('just_paid') === 'true';
+  const [showSuccess, setShowSuccess] = useState(justPaid);
+
+  const dismissSuccess = () => {
+    setShowSuccess(false);
+    // Limpiar el query param sin recargar
+    router.replace(`/dashboard/postcard/${postcardId}`);
+    // Refetch para tomar el is_activated actualizado
+    if (postcardId) {
+      fetch(`/api/postcards/${postcardId}`)
+        .then((r) => r.json())
+        .then((res) => {
+          if (res.success && res.data) setPostcard(res.data);
+        });
+    }
+  };
 
   const videoPath =
     postcard?.user_id && postcard?.id
@@ -328,7 +351,7 @@ export default function PostcardDetailPage() {
 
               {/* Video AR */}
               <div className="lg:col-span-4">
-                <MediaCard label="Video AR" icon={<Video className="h-4 w-4" />}>
+                <MediaCard label="Video de realidad aumentada" icon={<Video className="h-4 w-4" />}>
                   <div className="relative h-[380px] md:h-[440px] bg-black overflow-hidden">
                     {postcard.video_url ? (
                       <>
@@ -370,17 +393,21 @@ export default function PostcardDetailPage() {
 
               {/* Action panel */}
               <div className="lg:col-span-3">
-                <ActionPanel
-                  isReady={isReady}
-                  status={postcard.status}
-                  postcardId={postcard.id}
-                  qrCodeUrl={qrCodeUrl}
-                  hasImage={!!postcard.image_url}
-                  hasVideo={!!postcard.video_url}
-                  onShare={handleShare}
-                  onDownload={handleDownload}
-                  onOpenQrDialog={() => setShowQrDialog(true)}
-                />
+                {postcard.status === 'ready' && !postcard.is_activated ? (
+                  <ActivationCTA postcardId={postcard.id} />
+                ) : (
+                  <ActionPanel
+                    isReady={isReady}
+                    status={postcard.status}
+                    postcardId={postcard.id}
+                    qrCodeUrl={qrCodeUrl}
+                    hasImage={!!postcard.image_url}
+                    hasVideo={!!postcard.video_url}
+                    onShare={handleShare}
+                    onDownload={handleDownload}
+                    onOpenQrDialog={() => setShowQrDialog(true)}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -396,7 +423,7 @@ export default function PostcardDetailPage() {
                   <div className="p-4 bg-white rounded-2xl shadow-sm">
                     <Image
                       src={qrCodeUrl}
-                      alt="Código QR para AR"
+                      alt="Código QR para realidad aumentada"
                       width={280}
                       height={280}
                       className="rounded-md"
@@ -404,7 +431,7 @@ export default function PostcardDetailPage() {
                   </div>
                 )}
                 <p className="text-sm text-muted-foreground text-center max-w-xs">
-                  Escanea con la cámara de tu teléfono para abrir la experiencia AR directamente.
+                  Escanea con la cámara de tu teléfono para abrir la experiencia de realidad aumentada directamente.
                 </p>
                 <div className="flex gap-2 w-full">
                   <Button onClick={() => handleShare('copy')} variant="outline" className="flex-1">
@@ -430,6 +457,10 @@ export default function PostcardDetailPage() {
               </div>
             </DialogContent>
           </Dialog>
+
+          {showSuccess && (
+            <PostPurchaseSuccess postcardId={postcardId} onDismiss={dismissSuccess} />
+          )}
         </div>
       </TooltipProvider>
     </MainLayout>
@@ -550,17 +581,17 @@ function ActionPanel({
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 {status === 'processing' &&
-                  'Estamos generando la experiencia AR. Esto puede tomar unos minutos.'}
+                  'Estamos generando la experiencia de realidad aumentada. Esto puede tomar unos minutos.'}
                 {status === 'error' &&
                   'No pudimos procesar tu postal. Intenta crearla nuevamente.'}
                 {status === 'needs_better_image' &&
-                  'La imagen necesita más contraste o detalles para funcionar bien en AR.'}
+                  'La imagen necesita más contraste o detalles para funcionar bien en realidad aumentada.'}
               </p>
             </div>
           </div>
           <Button disabled variant="outline" className="w-full opacity-50">
             <Eye className="mr-2 h-4 w-4" />
-            AR no disponible aún
+            Realidad aumentada no disponible aún
           </Button>
         </CardContent>
       </Card>
@@ -575,7 +606,7 @@ function ActionPanel({
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Escanea para AR
+                Escanea para realidad aumentada
               </h3>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -596,7 +627,7 @@ function ActionPanel({
             >
               <Image
                 src={qrCodeUrl}
-                alt="Código QR para AR"
+                alt="Código QR para realidad aumentada"
                 width={200}
                 height={200}
                 className="w-full h-auto rounded-md group-hover:scale-[1.02] transition-transform"
@@ -612,7 +643,7 @@ function ActionPanel({
             className="w-full bg-linear-to-r from-primary to-ring hover:from-primary/90 hover:to-ring/90 text-primary-foreground font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all h-12"
           >
             <Sparkles className="mr-2 h-4 w-4" />
-            Ver en AR
+            Ver en realidad aumentada
           </Button>
         </Link>
 

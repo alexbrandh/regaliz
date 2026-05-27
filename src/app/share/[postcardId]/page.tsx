@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: SharePageProps): Promise<Meta
   try {
     const { data: postcard } = await supabase
       .from('postcards')
-      .select('title, image_url')
+      .select('title, image_url, is_activated')
       .eq('id', resolvedParams.postcardId)
       .single();
 
@@ -28,18 +28,25 @@ export async function generateMetadata({ params }: SharePageProps): Promise<Meta
       };
     }
 
+    if (!postcard.is_activated) {
+      return {
+        title: 'Regaliz — Tu regalo te espera',
+        description: 'Tu postal personalizada está siendo preparada.',
+      };
+    }
+
     return {
-      title: `${postcard.title} - Regaliz AR`,
+      title: `${postcard.title} - Regaliz`,
       description: `Mira esta increíble postcard en realidad aumentada: ${postcard.title}`,
       openGraph: {
-        title: `${postcard.title} - Regaliz AR`,
+        title: `${postcard.title} - Regaliz`,
         description: `Experimenta esta postcard en realidad aumentada`,
         images: postcard.image_url ? [postcard.image_url] : [],
         type: 'website',
       },
       twitter: {
         card: 'summary_large_image',
-        title: `${postcard.title} - Regaliz AR`,
+        title: `${postcard.title} - Regaliz`,
         description: `Experimenta esta postcard en realidad aumentada`,
         images: postcard.image_url ? [postcard.image_url] : [],
       },
@@ -58,7 +65,39 @@ export default async function SharePage({ params }: SharePageProps) {
   const resolvedParams = await params;
   
   try {
-    // Obtener la postcard (solo las públicas o las que tienen processing_status = 'ready')
+    // First pass: query only non-sensitive status fields so we can decide whether
+    // to expose asset URLs. Asset fields (image_url, video_url, nft_descriptors)
+    // are only queried for activated postcards in the second pass below.
+    const { data: status, error: statusError } = await supabase
+      .from('postcards')
+      .select('id, title, is_activated, processing_status, user_id')
+      .eq('id', resolvedParams.postcardId)
+      .eq('processing_status', 'ready')
+      .single();
+
+    if (statusError || !status) {
+      console.error('Error obteniendo postcard:', statusError);
+      notFound();
+    }
+
+    if (!status.is_activated) {
+      return (
+        <main style={{
+          minHeight: '100vh',
+          background: 'linear-gradient(135deg, #1a1a1a 0%, #2d1f1f 50%, #1a1a1a 100%)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          color: '#FAF8F5', padding: '24px', textAlign: 'center'
+        }}>
+          <h1 style={{ fontSize: '28px', marginBottom: '12px' }}>Tu regalo está siendo preparado ✨</h1>
+          <p style={{ color: '#bbb', maxWidth: '460px' }}>
+            Esta postal aún no está disponible para compartir. Vuelve pronto.
+          </p>
+        </main>
+      );
+    }
+
+    // Second pass: now that we've confirmed the postcard is activated, fetch
+    // the full record including asset URLs.
     const { data: postcard, error } = await supabase
       .from('postcards')
       .select(`
@@ -69,10 +108,13 @@ export default async function SharePage({ params }: SharePageProps) {
         nft_descriptors,
         processing_status,
         created_at,
-        updated_at
+        updated_at,
+        is_activated,
+        user_id
       `)
       .eq('id', resolvedParams.postcardId)
       .eq('processing_status', 'ready')
+      .eq('is_activated', true)
       .single();
 
     if (error || !postcard) {
@@ -81,7 +123,7 @@ export default async function SharePage({ params }: SharePageProps) {
     }
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100">
         <SharePostcardView postcard={postcard as Postcard} />
       </div>
     );

@@ -1,0 +1,77 @@
+<!--
+  Pegar este snippet en Shopify Admin → Settings → Checkout → Order processing → Additional scripts.
+  Lee postcard_id de los note_attributes de la orden y construye un botón + auto-redirect a Regaliz.
+
+  Variables Liquid disponibles en Order Status Page:
+    - {{ checkout.note_attributes }} en la Liquid del email/order
+    - JS: Shopify.checkout.note_attributes
+-->
+<style>
+  .regaliz-return-card {
+    margin: 24px 0;
+    padding: 24px;
+    background: linear-gradient(135deg, #FFF5F2 0%, #FFEDE5 100%);
+    border: 2px solid #F47B6B;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .regaliz-return-card h2 {
+    font-size: 20px;
+    margin: 0 0 8px;
+    color: #1a1a1a;
+  }
+  .regaliz-return-card p {
+    color: #555;
+    margin: 0 0 16px;
+    font-size: 14px;
+  }
+  .regaliz-return-btn {
+    display: inline-block;
+    background: #F47B6B;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .regaliz-return-btn:hover { background: #e36854; }
+  .regaliz-countdown { font-size: 12px; color: #888; margin-top: 12px; }
+</style>
+
+<div id="regaliz-return-block"></div>
+
+<script>
+(function () {
+  if (typeof Shopify === 'undefined' || !Shopify.checkout) return;
+
+  var attrs = Shopify.checkout.note_attributes || [];
+  var postcardAttr = attrs.find(function (a) { return a.name === 'postcard_id'; });
+  if (!postcardAttr) return;
+
+  var postcardId = postcardAttr.value;
+  var returnUrl = 'https://regaliz.com.co/dashboard/postcard/' + encodeURIComponent(postcardId) + '?just_paid=true';
+
+  var block = document.getElementById('regaliz-return-block');
+  if (!block) return;
+
+  block.innerHTML = ''
+    + '<div class="regaliz-return-card">'
+    +   '<h2>🎉 ¡Tu postal está activa!</h2>'
+    +   '<p>Vuelve a Regaliz para ver tu experiencia AR y compartirla.</p>'
+    +   '<a class="regaliz-return-btn" href="' + returnUrl + '">Ver tu postal activa →</a>'
+    +   '<div class="regaliz-countdown" id="regaliz-countdown">Te llevaremos automáticamente en 8 segundos…</div>'
+    + '</div>';
+
+  var seconds = 8;
+  var countdown = document.getElementById('regaliz-countdown');
+  var timer = setInterval(function () {
+    seconds -= 1;
+    if (countdown) countdown.textContent = 'Te llevaremos automáticamente en ' + seconds + ' segundos…';
+    if (seconds <= 0) {
+      clearInterval(timer);
+      window.location.href = returnUrl;
+    }
+  }, 1000);
+})();
+</script>
