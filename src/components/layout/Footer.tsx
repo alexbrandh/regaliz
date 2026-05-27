@@ -7,7 +7,7 @@ import Image from 'next/image';
 export function Footer() {
   return (
     <footer className="border-t border-border/50 bg-background/50 backdrop-blur-sm">
-      <div className="container py-10 md:py-14 px-4 md:px-6 lg:px-8">
+      <div className="container pt-10 md:pt-14 pb-32 md:pb-20 px-4 md:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
           {/* Brand */}
           <div className="space-y-4">
@@ -28,7 +28,7 @@ export function Footer() {
               />
             </Link>
             <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">
-              Crea experiencias AR mágicas combinando tus fotos con videos. 
+              Crea experiencias de realidad aumentada mágicas combinando tus fotos con videos.
               Comparte recuerdos que cobran vida.
             </p>
           </div>
