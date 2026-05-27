@@ -340,6 +340,17 @@ async function handleDeletePostcard(
     postcardId
   });
 
+  // Bloquear borrado si la postal está activada con fulfillment físico
+  if (postcard.is_activated && postcard.fulfillment_type === 'physical') {
+    const detailedError = createDetailedError(
+      'VALIDATION_ERROR',
+      context,
+      new Error('Cannot delete a postcard with an active physical order — contact support if you need to cancel.')
+    );
+    logError(detailedError);
+    throw detailedError;
+  }
+
   // Derive deterministic storage folder and delete any objects found
   logger.debug('Preparing storage cleanup by folder derivation', { postcardId });
   const folder = `${postcard.user_id}/${postcard.id}`;

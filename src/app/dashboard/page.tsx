@@ -136,7 +136,7 @@ export default function DashboardPage() {
                 <h1 className="text-2xl md:text-3xl font-bold text-foreground">Mis Postales Regaliz</h1>
                 <p className="text-muted-foreground mt-1.5 text-sm md:text-base">
                   {!Array.isArray(postcards) || postcards.length === 0 
-                    ? 'Crea tu primera postal AR para comenzar' 
+                    ? 'Crea tu primera postal de realidad aumentada para comenzar'
                     : `${postcards.length} postal${postcards.length === 1 ? '' : 'es'}`
                   }
                 </p>
@@ -224,7 +224,7 @@ export default function DashboardPage() {
                   </div>
                   <h2 className="text-2xl font-bold text-foreground mb-4">Aún no hay postales</h2>
                   <p className="text-muted-foreground mb-6">
-                    Crea tu primera postal AR subiendo una foto y video. 
+                    Crea tu primera postal de realidad aumentada subiendo una foto y video.
                     Comparte experiencias mágicas que cobran vida a través de cualquier cámara.
                   </p>
                   <Link href="/dashboard/new">
@@ -286,7 +286,13 @@ export default function DashboardPage() {
               <DialogTitle>Eliminar postal</DialogTitle>
               <DialogDescription>
                 {selectedPostcard ? (
-                  <>¿Seguro que deseas eliminar &quot;{selectedPostcard.title}&quot;? Esta acción no se puede deshacer.</>
+                  selectedPostcard.is_activated && selectedPostcard.fulfillment_type === 'physical' ? (
+                    <span className="text-red-600 font-medium">
+                      ⚠️ Esta postal tiene una orden física activa. No se puede eliminar mientras esté en proceso de envío. Si necesitas cancelarla, contáctanos.
+                    </span>
+                  ) : (
+                    <>¿Seguro que deseas eliminar &quot;{selectedPostcard.title}&quot;? Esta acción no se puede deshacer.</>
+                  )
                 ) : (
                   <>¿Seguro que deseas eliminar esta postal? Esta acción no se puede deshacer.</>
                 )}
@@ -303,7 +309,11 @@ export default function DashboardPage() {
               <Button
                 variant="destructive"
                 onClick={() => { if (pendingDeleteId) { handleDelete(pendingDeleteId); } }}
-                disabled={!pendingDeleteId || isDeleting}
+                disabled={
+                  !pendingDeleteId ||
+                  isDeleting ||
+                  (selectedPostcard?.is_activated === true && selectedPostcard?.fulfillment_type === 'physical')
+                }
               >
                 {isDeleting ? 'Eliminando...' : 'Eliminar'}
               </Button>
