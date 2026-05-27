@@ -37,6 +37,11 @@ interface PostcardResponse {
   };
   created_at: string;
   message?: string;
+  user_id?: string;
+  // NEW:
+  is_activated?: boolean;
+  fulfillment_type?: 'digital' | 'physical' | null;
+  activated_at?: string | null;
 }
 
 async function handleGetPostcard(
@@ -96,7 +101,7 @@ async function handleGetPostcard(
         status: postcard.processing_status,
         message: postcard.processing_status === 'processing' 
           ? 'Postcard is still being processed' 
-          : 'Postcard is not ready for AR viewing',
+          : 'Postcard is not ready for realidad aumentada viewing',
         created_at: postcard.created_at
       }
     );
@@ -177,18 +182,26 @@ async function handleGetPostcard(
     nft_descriptors: nftDescriptors
   });
 
+  const { userId: callerUserId } = await auth();
+  const isOwner = callerUserId === postcard.user_id;
+  const visibleToPublic = postcard.is_activated || isOwner;
+
   return createApiResponse(
     true,
     {
       id: postcard.id,
-      user_id: postcard.user_id, // Include user_id for client-side path construction
+      user_id: postcard.user_id,
       status: postcard.processing_status,
-      image_url: imageUrl,
-      video_url: videoUrl,
-      nft_descriptors: nftDescriptors as PostcardResponse['nft_descriptors'],
       title: postcard.title,
       description: postcard.description || undefined,
-      created_at: postcard.created_at
+      created_at: postcard.created_at,
+      is_activated: postcard.is_activated,
+      fulfillment_type: postcard.fulfillment_type,
+      activated_at: postcard.activated_at,
+      // Only expose assets if activated OR caller is owner
+      image_url: visibleToPublic ? imageUrl : undefined,
+      video_url: visibleToPublic ? videoUrl : undefined,
+      nft_descriptors: visibleToPublic ? (nftDescriptors as PostcardResponse['nft_descriptors']) : undefined,
     }
   );
 }
