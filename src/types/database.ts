@@ -47,6 +47,12 @@ export interface Database {
           is_public: boolean
           created_at: string
           updated_at: string
+          is_activated: boolean
+          activated_at: string | null
+          fulfillment_type: 'digital' | 'physical' | null
+          shopify_order_id: string | null
+          shopify_order_number: string | null
+          shipping_address: Json | null
         }
         Insert: {
           id?: string
@@ -61,6 +67,12 @@ export interface Database {
           is_public?: boolean
           created_at?: string
           updated_at?: string
+          is_activated?: boolean
+          activated_at?: string | null
+          fulfillment_type?: 'digital' | 'physical' | null
+          shopify_order_id?: string | null
+          shopify_order_number?: string | null
+          shipping_address?: Json | null
         }
         Update: {
           id?: string
@@ -75,6 +87,42 @@ export interface Database {
           is_public?: boolean
           created_at?: string
           updated_at?: string
+          is_activated?: boolean
+          activated_at?: string | null
+          fulfillment_type?: 'digital' | 'physical' | null
+          shopify_order_id?: string | null
+          shopify_order_number?: string | null
+          shipping_address?: Json | null
+        }
+        Relationships: []
+      }
+      shopify_webhook_events: {
+        Row: {
+          id: string
+          shopify_event_id: string
+          topic: string
+          payload: Json
+          processed_at: string | null
+          error: string | null
+          received_at: string
+        }
+        Insert: {
+          id?: string
+          shopify_event_id: string
+          topic: string
+          payload: Json
+          processed_at?: string | null
+          error?: string | null
+          received_at?: string
+        }
+        Update: {
+          id?: string
+          shopify_event_id?: string
+          topic?: string
+          payload?: Json
+          processed_at?: string | null
+          error?: string | null
+          received_at?: string
         }
         Relationships: []
       }
@@ -98,3 +146,15 @@ export type Postcard = Database['public']['Tables']['postcards']['Row']
 export type PostcardInsert = Database['public']['Tables']['postcards']['Insert']
 export type PostcardUpdate = Database['public']['Tables']['postcards']['Update']
 export type ProcessingStatus = Database['public']['Enums']['processing_status']
+
+export interface ShippingAddress {
+  first_name: string
+  last_name: string
+  address1: string
+  address2?: string | null
+  city: string
+  province?: string | null
+  country: string
+  zip: string
+  phone?: string | null
+}
