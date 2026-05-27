@@ -174,12 +174,12 @@ async function handleGetPostcard(
   // NFT descriptors - just pass through, no need for signed URLs (using public bucket or proxy)
   const nftDescriptors = postcard.nft_descriptors;
 
-  console.log('✅ [API-GET] Postcard fetched successfully:', {
-    id: postcard.id,
-    status: postcard.processing_status,
-    image_url: imageUrl,
-    video_url: videoUrl,
-    nft_descriptors: nftDescriptors
+  logger.info('Postcard fetched successfully', {
+    postcardId: postcard.id,
+    metadata: {
+      status: postcard.processing_status,
+      hasNftDescriptors: !!nftDescriptors,
+    }
   });
 
   const { userId: callerUserId } = await auth();

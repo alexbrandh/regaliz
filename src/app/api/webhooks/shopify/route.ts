@@ -46,8 +46,10 @@ export async function POST(req: NextRequest) {
       logger.info('Duplicate webhook ignored', { metadata: { eventId, topic } });
       return new NextResponse('OK (duplicate)', { status: 200 });
     }
-    logger.error('Failed to log webhook event', { metadata: { eventId, topic } }, new Error(insertError.message));
-    return new NextResponse('Internal error', { status: 500 });
+    // Could not log the event (transient DB error). Process anyway and return 200
+    // to prevent Shopify from retrying — manual re-processing is preferable to
+    // retry storms if Supabase has a hiccup.
+    logger.error('Failed to log webhook event — processing anyway', { metadata: { eventId, topic } }, new Error(insertError.message));
   }
 
   // 5. Dispatch por topic
@@ -81,7 +83,6 @@ export async function POST(req: NextRequest) {
   return new NextResponse('OK', { status: 200 });
 }
 
-// Task 8 will replace this stub
 async function handleOrderPaid(payload: Record<string, unknown>, supabase: ReturnType<typeof createServerClient>) {
   const orderId = String(payload.id ?? '');
   const orderName = (payload.name as string | undefined) ?? null;
@@ -139,7 +140,6 @@ async function handleOrderPaid(payload: Record<string, unknown>, supabase: Retur
   });
 }
 
-// Task 9 will replace these stubs
 async function handleRefundCreated(payload: Record<string, unknown>, supabase: ReturnType<typeof createServerClient>) {
   const orderId = String(payload.order_id ?? '');
   if (!orderId) {

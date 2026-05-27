@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CheckCircle2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -18,6 +18,7 @@ interface PostcardStatus {
 export function PostPurchaseSuccess({ postcardId, onDismiss }: PostPurchaseSuccessProps) {
   const [status, setStatus] = useState<'polling' | 'activated' | 'timeout'>('polling');
   const [data, setData] = useState<PostcardStatus | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -33,28 +34,31 @@ export function PostPurchaseSuccess({ postcardId, onDismiss }: PostPurchaseSucce
         const json = await res.json();
         const payload = (json?.data ?? json) as PostcardStatus;
 
+        if (cancelled) return;
+
         if (payload?.is_activated) {
-          if (!cancelled) {
-            setData(payload);
-            setStatus('activated');
-          }
+          setData(payload);
+          setStatus('activated');
           return;
         }
       } catch (err) {
         console.error('Polling error:', err);
       }
 
+      if (cancelled) return;
+
       if (attempts >= MAX_ATTEMPTS) {
-        if (!cancelled) setStatus('timeout');
+        setStatus('timeout');
         return;
       }
 
-      setTimeout(poll, 2000);
+      timeoutRef.current = setTimeout(poll, 2000);
     };
 
     poll();
     return () => {
       cancelled = true;
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, [postcardId]);
 

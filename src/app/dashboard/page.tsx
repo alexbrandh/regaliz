@@ -270,7 +270,10 @@ export default function DashboardPage() {
                   <PostcardCard
                     key={postcard.id}
                     postcard={postcard}
-                    onDelete={deletePostcard}
+                    onDelete={(id) => {
+                      setPendingDeleteId(id);
+                      setConfirmOpen(true);
+                    }}
                     onNavigate={handleNavigateToPostcard}
                   />
                 ))}

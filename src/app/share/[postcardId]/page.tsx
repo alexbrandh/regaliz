@@ -65,7 +65,39 @@ export default async function SharePage({ params }: SharePageProps) {
   const resolvedParams = await params;
   
   try {
-    // Obtener la postcard (solo las públicas o las que tienen processing_status = 'ready')
+    // First pass: query only non-sensitive status fields so we can decide whether
+    // to expose asset URLs. Asset fields (image_url, video_url, nft_descriptors)
+    // are only queried for activated postcards in the second pass below.
+    const { data: status, error: statusError } = await supabase
+      .from('postcards')
+      .select('id, title, is_activated, processing_status, user_id')
+      .eq('id', resolvedParams.postcardId)
+      .eq('processing_status', 'ready')
+      .single();
+
+    if (statusError || !status) {
+      console.error('Error obteniendo postcard:', statusError);
+      notFound();
+    }
+
+    if (!status.is_activated) {
+      return (
+        <main style={{
+          minHeight: '100vh',
+          background: 'linear-gradient(135deg, #1a1a1a 0%, #2d1f1f 50%, #1a1a1a 100%)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          color: '#FAF8F5', padding: '24px', textAlign: 'center'
+        }}>
+          <h1 style={{ fontSize: '28px', marginBottom: '12px' }}>Tu regalo está siendo preparado ✨</h1>
+          <p style={{ color: '#bbb', maxWidth: '460px' }}>
+            Esta postal aún no está disponible para compartir. Vuelve pronto.
+          </p>
+        </main>
+      );
+    }
+
+    // Second pass: now that we've confirmed the postcard is activated, fetch
+    // the full record including asset URLs.
     const { data: postcard, error } = await supabase
       .from('postcards')
       .select(`
@@ -82,27 +114,12 @@ export default async function SharePage({ params }: SharePageProps) {
       `)
       .eq('id', resolvedParams.postcardId)
       .eq('processing_status', 'ready')
+      .eq('is_activated', true)
       .single();
 
     if (error || !postcard) {
       console.error('Error obteniendo postcard:', error);
       notFound();
-    }
-
-    if (!postcard.is_activated) {
-      return (
-        <main style={{
-          minHeight: '100vh',
-          background: 'linear-gradient(135deg, #1a1a1a 0%, #2d1f1f 50%, #1a1a1a 100%)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          color: '#FAF8F5', padding: '24px', textAlign: 'center'
-        }}>
-          <h1 style={{ fontSize: '28px', marginBottom: '12px' }}>Tu regalo está siendo preparado ✨</h1>
-          <p style={{ color: '#bbb', maxWidth: '460px' }}>
-            Esta postal aún no está disponible para compartir. Vuelve pronto.
-          </p>
-        </main>
-      );
     }
 
     return (
