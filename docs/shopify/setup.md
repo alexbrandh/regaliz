@@ -6,9 +6,10 @@ Estas tareas se hacen UNA SOLA VEZ en Shopify Admin. Si la tienda cambia o se re
 
 1. Shopify Admin → **Settings** → **Notifications** → scroll a **Webhooks**
 2. Crear 3 webhooks, todos con:
-   - URL: `https://regaliz.com.co/api/webhooks/shopify`
+   - URL: `https://www.regaliz.com.co/api/webhooks/shopify`
+     - **Importante**: usar `www`. El dominio bare (`regaliz.com.co`) hace redirect 307 a `www`, y Shopify no sigue redirects en entrega de webhooks.
    - Format: **JSON**
-   - API version: `2025-01` (o la más reciente estable)
+   - API version: la más reciente estable (o candidate si quieres adelantarte)
 3. Topics a crear:
    - `Order paid` → `orders/paid`
    - `Order cancelled` → `orders/cancelled`
