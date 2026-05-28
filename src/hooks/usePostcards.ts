@@ -34,12 +34,26 @@ type ApiErrorResponse = {
   message?: string;
 };
 
-export function usePostcards() {
+interface UsePostcardsOptions {
+  /**
+   * Pre-fetched postcards from the server (e.g. RSC). When provided, the hook
+   * hydrates state with this data on mount and SKIPS the initial /api/postcards
+   * fetch — saving a full client roundtrip on first paint. Background refresh
+   * (visibilitychange, refreshAllPostcards, mutations) still works as before.
+   */
+  initialData?: Postcard[];
+}
+
+export function usePostcards(options: UsePostcardsOptions = {}) {
+  const { initialData } = options;
   const { user, isLoaded } = useUser();
   const { retryWithConnection, isOnline } = useNetworkStatus();
-  const [postcards, _setPostcards] = useState<Postcard[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [postcards, _setPostcards] = useState<Postcard[]>(() => initialData ?? []);
+  // If we already have server-rendered data, we're not "loading" on first paint.
+  const [loading, setLoading] = useState<boolean>(initialData === undefined);
   const [error, setError] = useState<string | null>(null);
+  // Track whether the initial fetch has already run (server-prefetch counts as run).
+  const hasHydratedRef = useRef<boolean>(initialData !== undefined);
 
   // Safe wrapper that ALWAYS deduplicates before setting state
   const setPostcards = useCallback((value: Postcard[] | ((prev: Postcard[]) => Postcard[])) => {
@@ -197,11 +211,15 @@ export function usePostcards() {
     return fetchPostcardsImmediate(forceCacheBust);
   }, [fetchPostcardsImmediate]);
 
-  // Initial fetch when Clerk finishes loading
+  // Initial fetch when Clerk finishes loading — skipped when initialData was
+  // already provided by a Server Component pre-fetch.
   useEffect(() => {
-    if (isLoaded) {
-      fetchPostcards(false);
+    if (!isLoaded) return;
+    if (hasHydratedRef.current) {
+      hasHydratedRef.current = false; // allow visibilitychange/refresh to fetch later
+      return;
     }
+    fetchPostcards(false);
   }, [isLoaded, fetchPostcards]);
 
   // Cleanup effect - cancel all pending requests
