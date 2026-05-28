@@ -1,7 +1,9 @@
-import type { Appearance } from '@clerk/types';
-import type { LocalizationResource } from '@clerk/types';
+// Types inferred from the literals — ClerkProvider validates them at usage.
+// Avoid importing from '@clerk/types' directly: it's a transitive peer of
+// '@clerk/nextjs' and not declared in package.json, so pnpm with frozen
+// lockfile on Vercel can't resolve it (local works only due to hoisting).
 
-export const clerkAppearance: Appearance = {
+export const clerkAppearance = {
   variables: {
     colorPrimary: '#F47B6B',
     colorBackground: '#FAF8F5',
@@ -20,9 +22,9 @@ export const clerkAppearance: Appearance = {
     socialButtonsPlacement: 'top',
     socialButtonsVariant: 'blockButton',
   },
-};
+} as const;
 
-export const clerkLocalization: LocalizationResource = {
+export const clerkLocalization = {
   locale: 'es-ES',
   socialButtonsBlockButton: 'Continuar con {{provider|titleize}}',
   dividerText: 'o',
