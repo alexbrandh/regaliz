@@ -485,7 +485,23 @@
             loadingScreen?.classList.add('hidden');
           }, 500);
         });
-        scene.setAttribute('mindar-image', `imageTargetSrc: ${targetUrl}; autoStart: true;`);
+        // MindAR tuning for tough targets (faces, screen-displayed images, low-texture photos):
+        // - warmupTolerance lowered from default 5 → 2 so targetFound fires after just 2 stable frames
+        // - missTolerance raised from default 5 → 12 so a brief glare/occlusion doesn't kill tracking
+        // - filterMinCF / filterBeta kept at MindAR defaults (good for hand jitter)
+        // ?debug=1 in the URL surfaces MindAR's FPS / matchingPoints overlay
+        const debugMode = urlParams.get('debug') === '1';
+        scene.setAttribute(
+          'mindar-image',
+          [
+            `imageTargetSrc: ${targetUrl}`,
+            'autoStart: true',
+            'maxTrack: 1',
+            'warmupTolerance: 2',
+            'missTolerance: 12',
+            debugMode ? 'showStats: true' : '',
+          ].filter(Boolean).join('; ')
+        );
         scene.setAttribute('color-space', 'sRGB');
         scene.setAttribute('renderer', 'colorManagement: true, physicallyCorrectLights');
         scene.setAttribute('vr-mode-ui', 'enabled: false');
