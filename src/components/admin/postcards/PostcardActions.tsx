@@ -58,7 +58,7 @@ export function PostcardActions({
         <DropdownMenuItem asChild>
           <a href={postcard.arLink} target="_blank" rel="noopener noreferrer">
             <ExternalLink className="size-4" />
-            Abrir experiencia AR
+            Abrir experiencia de realidad aumentada
           </a>
         </DropdownMenuItem>
 
@@ -66,7 +66,7 @@ export function PostcardActions({
         <DropdownMenuLabel className="text-xs">Compartir</DropdownMenuLabel>
         <DropdownMenuItem onClick={() => onCopyLink(postcard)}>
           <LinkIcon className="size-4" />
-          Copiar enlace AR
+          Copiar enlace de realidad aumentada
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onDownload(postcard, 'image')} disabled={!postcard.image_url}>
           <Download className="size-4" />
@@ -122,7 +122,7 @@ export function QuickViewLink({ postcard, onCopyLink, copied }: QuickActionsProp
       {copied ? <span className="text-emerald-600 dark:text-emerald-400">Copiado</span> : (
         <>
           <Eye className="size-3" />
-          Copiar enlace AR
+          Copiar enlace de realidad aumentada
         </>
       )}
     </button>

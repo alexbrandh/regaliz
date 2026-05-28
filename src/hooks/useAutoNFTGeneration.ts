@@ -147,8 +147,8 @@ export function useAutoNFTGeneration({
       toast({
         title: "¡NFT generado exitosamente!",
         description: currentAttempt > 1 
-          ? `Los descriptores AR reales han sido creados (intento ${currentAttempt}).`
-          : "Los descriptores AR reales han sido creados. ¡Tu postal AR está lista!",
+          ? `Los descriptores de realidad aumentada reales han sido creados (intento ${currentAttempt}).`
+          : "Los descriptores de realidad aumentada reales han sido creados. ¡Tu postal de realidad aumentada está lista!",
       });
 
     } catch (error) {
@@ -187,7 +187,7 @@ export function useAutoNFTGeneration({
         
         toast({
           title: "Error en generación de NFT",
-          description: `No se pudieron generar los descriptores AR después de ${generationStatus.maxAttempts} intentos: ${errorMessage}`,
+          description: `No se pudieron generar los descriptores de realidad aumentada después de ${generationStatus.maxAttempts} intentos: ${errorMessage}`,
           variant: "destructive",
         });
         

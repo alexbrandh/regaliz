@@ -65,7 +65,7 @@ function AnimatedHero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <span className="text-foreground">Crea postales AR</span>
+              <span className="text-foreground">Crea postales de realidad aumentada</span>
               <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
                 &nbsp;
                 {titles.map((title, index) => (
@@ -123,7 +123,7 @@ function AnimatedHero() {
               <Link href="/dashboard/new">
                 <Button size="lg" className="gap-2 text-lg px-8">
                   <Camera className="w-5 h-5" />
-                  Crear Postal AR
+                  Crear Postal de realidad aumentada
                 </Button>
               </Link>
             </SignedIn>

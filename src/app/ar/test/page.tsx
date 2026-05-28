@@ -55,8 +55,8 @@ export default function ARTestPage() {
   // Test postcard data using AR.js example
   const testPostcard = {
     id: 'test',
-    title: 'Postal AR de Prueba',
-    description: 'Prueba la funcionalidad AR con descriptores de ejemplo',
+    title: 'Postal de realidad aumentada de Prueba',
+    description: 'Prueba la funcionalidad de realidad aumentada con descriptores de ejemplo',
     image_url: '/images/pinball-marker.jpg',
     video_url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
     nft_descriptors: {
@@ -252,7 +252,7 @@ export default function ARTestPage() {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
       console.error('❌ [AR Test] AR initialization failed:', errorMessage);
-      setError(`Error al inicializar AR: ${errorMessage}`);
+      setError(`Error al inicializar realidad aumentada: ${errorMessage}`);
     }
   }, []);
 
@@ -457,7 +457,7 @@ export default function ARTestPage() {
       <div className="min-h-screen bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
         <div className="text-center space-y-6 max-w-md">
           <AlertCircle className="h-16 w-16 text-red-500 mx-auto" />
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Prueba AR - Error</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Prueba de realidad aumentada - Error</h1>
           <p className="text-gray-600 dark:text-gray-300">{error}</p>
           
           <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4 text-left">
@@ -483,9 +483,9 @@ export default function ARTestPage() {
       <div className="min-h-screen bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
         <div className="text-center space-y-4">
           <Camera className="h-16 w-16 text-blue-500 mx-auto animate-pulse" />
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Cargando Prueba AR</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Cargando Prueba de realidad aumentada</h1>
           <p className="text-gray-600 dark:text-gray-300 max-w-md">
-            {cameraStatus === 'checking' ? 'Verificando acceso a la cámara...' : 'Cargando librerías AR...'}
+            {cameraStatus === 'checking' ? 'Verificando acceso a la cámara...' : 'Cargando librerías de realidad aumentada...'}
           </p>
         </div>
       </div>
@@ -835,7 +835,7 @@ export default function ARTestPage() {
         <div className="bg-black/50 backdrop-blur-sm rounded-lg p-4 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-lg font-semibold">🧪 Prueba AR</h1>
+              <h1 className="text-lg font-semibold">🧪 Prueba de realidad aumentada</h1>
               <p className="text-sm opacity-80">Apunta a la imagen de pinball</p>
             </div>
             <div className="flex items-center space-x-2">
@@ -875,10 +875,10 @@ export default function ARTestPage() {
       <div className="absolute bottom-4 left-4 z-10">
         <div className="bg-black/50 backdrop-blur-sm rounded-lg p-3 text-white text-sm max-w-xs">
           {!isTracking && !trackingLost && (
-            <p>📱 Apunta tu cámara a la imagen de pinball para ver la experiencia AR</p>
+            <p>📱 Apunta tu cámara a la imagen de pinball para ver la experiencia de realidad aumentada</p>
           )}
           {isTracking && (
-            <p>✅ ¡Marcador detectado! Video reproduciéndose en AR</p>
+            <p>✅ ¡Marcador detectado! Video reproduciéndose en realidad aumentada</p>
           )}
           {trackingLost && (
             <p>⚠️ Marcador perdido. Vuelve a enfocar la imagen</p>

@@ -25,7 +25,7 @@ const steps: Step[] = [
     title: 'Sube tu',
     titleAccent: 'contenido.',
     description:
-      'Elige una foto como objetivo AR y sube un video que se reproducirá cuando alguien la escanee con su cámara.',
+      'Elige una foto como objetivo de realidad aumentada y sube un video que se reproducirá cuando alguien la escanee con su cámara.',
     video: '/videos/how-it-works-step-1.mp4',
     poster: '/videos/how-it-works-step-1.jpg',
     screenBg:
@@ -39,7 +39,7 @@ const steps: Step[] = [
     title: 'La IA hace',
     titleAccent: 'la magia.',
     description:
-      'Nuestra inteligencia artificial genera marcadores de seguimiento AR desde tu foto para un reconocimiento perfecto.',
+      'Nuestra inteligencia artificial genera marcadores de seguimiento de realidad aumentada desde tu foto para un reconocimiento perfecto.',
     video: '/videos/how-it-works-step-2.mp4',
     poster: '/videos/how-it-works-step-2.jpg',
     screenBg:
@@ -51,9 +51,9 @@ const steps: Step[] = [
     icon: Share2,
     eyebrow: 'Paso 03',
     title: 'Comparte y',
-    titleAccent: 'vive el AR.',
+    titleAccent: 'vive la realidad aumentada.',
     description:
-      'Comparte el enlace de tu postal AR. Cualquiera puede apuntar su cámara y ver tu video cobrar vida sobre la foto.',
+      'Comparte el enlace de tu postal de realidad aumentada. Cualquiera puede apuntar su cámara y ver tu video cobrar vida sobre la foto.',
     video: '/videos/how-it-works-step-3.mp4',
     poster: '/videos/how-it-works-step-3.jpg',
     screenBg:
@@ -110,7 +110,7 @@ export function HowItWorksSection() {
           transition={{ duration: 0.55, delay: 0.1 }}
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
         >
-          Crea experiencias AR impresionantes en solo{' '}
+          Crea experiencias de realidad aumentada impresionantes en solo{' '}
           <span className="text-primary font-semibold">3 pasos simples</span>
         </motion.p>
       </div>

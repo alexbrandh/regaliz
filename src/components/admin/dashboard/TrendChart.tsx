@@ -106,7 +106,7 @@ export function TrendChart({ data, className }: TrendChartProps) {
         ))}
 
         {/* Views line (secondary color) */}
-        <path d={viewsPath} fill="none" className="stroke-[var(--chart-2)] stroke-2" />
+        <path d={viewsPath} fill="none" className="stroke-chart-2 stroke-2" />
 
         {/* Created line (primary) */}
         <path d={createdPath} fill="none" className="stroke-primary stroke-2" />
@@ -135,7 +135,7 @@ export function TrendChart({ data, className }: TrendChartProps) {
               className="stroke-border"
             />
             <circle cx={hoverPoint.x} cy={hoverPoint.yCreated} r={3.5} className="fill-primary" />
-            <circle cx={hoverPoint.x} cy={hoverPoint.yViews} r={3.5} className="fill-[var(--chart-2)]" />
+            <circle cx={hoverPoint.x} cy={hoverPoint.yViews} r={3.5} className="fill-chart-2" />
           </g>
         )}
       </svg>
@@ -154,8 +154,8 @@ export function TrendChart({ data, className }: TrendChartProps) {
             <span className="font-medium tabular-nums">{formatNumber(hoverPoint.d.created)}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="size-2 rounded-full bg-[var(--chart-2)]" />
-            <span className="text-muted-foreground">Vistas AR:</span>
+            <span className="size-2 rounded-full bg-chart-2" />
+            <span className="text-muted-foreground">Vistas de realidad aumentada:</span>
             <span className="font-medium tabular-nums">{formatNumber(hoverPoint.d.views)}</span>
           </div>
         </div>

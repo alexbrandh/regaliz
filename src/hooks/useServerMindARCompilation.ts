@@ -131,8 +131,8 @@ export function useServerMindARCompilation({
       onGenerationComplete?.();
 
       toast({
-        title: "¡Target AR generado!",
-        description: "Tu postal AR está lista para usar.",
+        title: "¡Target de realidad aumentada generado!",
+        description: "Tu postal de realidad aumentada está lista para usar.",
       });
 
     } catch (error) {
@@ -170,7 +170,7 @@ export function useServerMindARCompilation({
         onGenerationError?.(errorMessage);
         
         toast({
-          title: "Error generando target AR",
+          title: "Error generando target de realidad aumentada",
           description: errorMessage,
           variant: "destructive",
         });

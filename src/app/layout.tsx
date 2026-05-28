@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   description: 'Crea postales en realidad aumentada combinando una foto y un video. Comparte recuerdos que cobran vida cuando se ven a través de la cámara.',
   applicationName: 'Regaliz',
-  keywords: ['postales AR', 'realidad aumentada', 'AR', 'fotos animadas', 'recuerdos', 'regalos', 'MindAR', 'postales digitales'],
+  keywords: ['postales de realidad aumentada', 'realidad aumentada', 'fotos animadas', 'recuerdos', 'regalos', 'postales digitales'],
   authors: [{ name: 'Regaliz' }],
   manifest: '/manifest.json',
   alternates: {
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: 'Regaliz',
     title: 'Regaliz - Postales en Realidad Aumentada',
-    description: 'Crea postales AR mágicas combinando una foto y un video. Comparte recuerdos que cobran vida.',
+    description: 'Crea postales de realidad aumentada mágicas combinando una foto y un video. Comparte recuerdos que cobran vida.',
     url: siteUrl,
     locale: 'es_ES',
     images: [
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Regaliz - Postales en Realidad Aumentada',
-    description: 'Crea postales AR mágicas combinando una foto y un video. Comparte recuerdos que cobran vida.',
+    description: 'Crea postales de realidad aumentada mágicas combinando una foto y un video. Comparte recuerdos que cobran vida.',
     images: ['/opengraph-image'],
   },
   robots: {

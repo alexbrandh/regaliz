@@ -17,7 +17,7 @@ export default function HelpPage() {
     {
       number: "01",
       title: "Sube tu Imagen",
-      description: "Selecciona una foto con buen contraste y detalles únicos. Esta imagen será el marcador que activará tu experiencia AR.",
+      description: "Selecciona una foto con buen contraste y detalles únicos. Esta imagen será el marcador que activará tu experiencia de realidad aumentada.",
     },
     {
       number: "02",
@@ -27,23 +27,23 @@ export default function HelpPage() {
     {
       number: "03",
       title: "Espera el Procesamiento",
-      description: "Nuestro sistema procesa automáticamente tu imagen para crear los marcadores AR. Esto toma unos minutos.",
+      description: "Nuestro sistema procesa automáticamente tu imagen para crear los marcadores de realidad aumentada. Esto toma unos minutos.",
     },
     {
       number: "04",
       title: "Comparte tu Postal",
-      description: "Una vez lista, comparte el enlace o código QR. Cualquiera puede ver tu postal AR desde su navegador.",
+      description: "Una vez lista, comparte el enlace o código QR. Cualquiera puede ver tu postal de realidad aumentada desde su navegador.",
     }
   ];
 
   const faqs = [
     {
       question: "¿Qué dispositivos son compatibles?",
-      answer: "Regaliz funciona en cualquier dispositivo con cámara y navegador web moderno. Recomendamos usar smartphones para la mejor experiencia AR."
+      answer: "Regaliz funciona en cualquier dispositivo con cámara y navegador web moderno. Recomendamos usar smartphones para la mejor experiencia de realidad aumentada."
     },
     {
-      question: "¿Por qué mi imagen no funciona bien para AR?",
-      answer: "Las mejores imágenes para AR tienen buen contraste, detalles únicos y texturas variadas. Evita imágenes muy lisas, brillantes o con patrones repetitivos."
+      question: "¿Por qué mi imagen no funciona bien para realidad aumentada?",
+      answer: "Las mejores imágenes para realidad aumentada tienen buen contraste, detalles únicos y texturas variadas. Evita imágenes muy lisas, brillantes o con patrones repetitivos."
     },
     {
       question: "¿Cuánto tiempo toma el procesamiento?",
@@ -66,7 +66,7 @@ export default function HelpPage() {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-foreground mb-4">Centro de Ayuda</h1>
           <p className="text-xl text-muted-foreground mb-6">
-            Aprende a crear experiencias AR increíbles con Regaliz
+            Aprende a crear experiencias de realidad aumentada increíbles con Regaliz
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/dashboard/new">
@@ -87,7 +87,7 @@ export default function HelpPage() {
         {/* Quick Start Guide - Simplified */}
         <Card className="mb-12">
           <CardHeader>
-            <CardTitle>Cómo Crear tu Postal AR</CardTitle>
+            <CardTitle>Cómo Crear tu Postal de realidad aumentada</CardTitle>
             <CardDescription>
               Sigue estos 4 pasos simples
             </CardDescription>
@@ -156,12 +156,12 @@ export default function HelpPage() {
         <div className="text-center mt-12 p-8 bg-linear-to-r from-primary/10 to-chart-3/10 rounded-lg">
           <h2 className="text-2xl font-bold text-foreground mb-4">¿Listo para comenzar?</h2>
           <p className="text-muted-foreground mb-6">
-            Crea tu primera postal AR y comparte experiencias mágicas que cobran vida
+            Crea tu primera postal de realidad aumentada y comparte experiencias mágicas que cobran vida
           </p>
           <Link href="/dashboard/new">
             <Button size="lg">
               <Camera className="mr-2 h-5 w-5" />
-              Crear Postal AR Ahora
+              Crear Postal de realidad aumentada Ahora
             </Button>
           </Link>
         </div>

@@ -17,7 +17,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-semibold mt-8 mb-3">1. Quiénes somos</h2>
             <p>
-              Regaliz es una plataforma para crear postales en realidad aumentada (AR) que combinan
+              Regaliz es una plataforma para crear postales en realidad aumentada que combinan
               una imagen y un video. El responsable del tratamiento es el equipo de Regaliz. Para
               cualquier consulta puedes escribirnos a <a className="text-primary underline" href="mailto:hola@regaliz.com.co">hola@regaliz.com.co</a>.
             </p>
@@ -29,7 +29,7 @@ export default function PrivacyPage() {
               <li><strong>Cuenta:</strong> nombre, correo electrónico y avatar (gestionados por Clerk).</li>
               <li><strong>Contenido subido:</strong> las imágenes y videos que tú decides cargar para crear tus postales.</li>
               <li><strong>Datos técnicos:</strong> dirección IP, tipo de dispositivo y navegador, registros de error.</li>
-              <li><strong>Uso:</strong> número de visualizaciones AR de tus postales (de forma agregada).</li>
+              <li><strong>Uso:</strong> número de visualizaciones de realidad aumentada de tus postales (de forma agregada).</li>
             </ul>
           </section>
 
@@ -37,7 +37,7 @@ export default function PrivacyPage() {
             <h2 className="text-2xl font-semibold mt-8 mb-3">3. Cómo usamos tus datos</h2>
             <p>Utilizamos tus datos exclusivamente para:</p>
             <ul className="list-disc pl-6 space-y-2">
-              <li>Permitirte crear, almacenar y compartir tus postales AR.</li>
+              <li>Permitirte crear, almacenar y compartir tus postales de realidad aumentada.</li>
               <li>Garantizar la seguridad y el correcto funcionamiento del servicio.</li>
               <li>Cumplir obligaciones legales.</li>
             </ul>

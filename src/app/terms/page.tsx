@@ -21,7 +21,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-2xl font-semibold mt-8 mb-3">2. Descripción del servicio</h2>
-            <p>Regaliz permite combinar una imagen y un video para generar una postal AR
+            <p>Regaliz permite combinar una imagen y un video para generar una postal de realidad aumentada
               compartible mediante enlace o código QR. El servicio se ofrece tal cual, sin
               garantía de disponibilidad ininterrumpida.</p>
           </section>

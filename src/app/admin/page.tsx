@@ -64,7 +64,7 @@ export default function DashboardPage() {
             hint={`+${analytics?.currentPeriod.created ?? 0} este período`}
           />
           <KpiCard
-            label="Vistas AR"
+            label="Vistas de realidad aumentada"
             value={stats?.totalArViews ?? 0}
             previousValue={(stats?.totalArViews ?? 0) - (analytics?.currentPeriod.views ?? 0)}
             icon={Eye}
@@ -95,7 +95,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="font-semibold">Actividad últimos 30 días</h2>
-              <p className="text-xs text-muted-foreground">Postales creadas y vistas AR por día</p>
+              <p className="text-xs text-muted-foreground">Postales creadas y vistas de realidad aumentada por día</p>
             </div>
             <div className="flex items-center gap-3 text-xs">
               <span className="inline-flex items-center gap-1.5">
@@ -104,7 +104,7 @@ export default function DashboardPage() {
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <span className="size-2 rounded-full bg-chart-2" />
-                Vistas AR
+                Vistas de realidad aumentada
               </span>
             </div>
           </div>
@@ -119,7 +119,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between mb-2">
             <div>
               <h2 className="font-semibold">Top postales</h2>
-              <p className="text-xs text-muted-foreground">Por número de vistas AR</p>
+              <p className="text-xs text-muted-foreground">Por número de vistas de realidad aumentada</p>
             </div>
             <Link
               href="/admin/postales"

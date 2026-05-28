@@ -640,8 +640,8 @@ export function usePostcards() {
                     : p
                 );
               });
-              if (status === 'error') toast.error(statusJson?.errorMessage || 'NFT generation failed.');
-              if (status === 'needs_better_image') toast.info('Image needs improvement for AR tracking.');
+              if (status === 'error') toast.error(statusJson?.errorMessage || 'Falló la generación NFT.');
+              if (status === 'needs_better_image') toast.info('La imagen necesita mejorar para el seguimiento de realidad aumentada.');
               completed = true;
               break;
             }
@@ -700,9 +700,9 @@ export function usePostcards() {
     try {
       const link = getARLink(postcardId);
       await navigator.clipboard.writeText(link);
-      toast.success('AR link copied to clipboard!');
+      toast.success('¡Enlace de realidad aumentada copiado al portapapeles!');
     } catch {
-      toast.error('Failed to copy AR link to clipboard');
+      toast.error('No se pudo copiar el enlace de realidad aumentada');
     }
   }, [getARLink]);
 

@@ -80,12 +80,12 @@ export function EditMediaModal({ postcard, type, onClose, onSaved }: EditMediaMo
         return;
       }
 
-      setProgress('Paso 2/3: Compilando target AR... (puede tardar ~20s)');
+      setProgress('Paso 2/3: Compilando target de realidad aumentada... (puede tardar ~20s)');
       const mindBlob = await compileMindARInBrowser(file, pct => {
-        setProgress(`Paso 2/3: Compilando AR... ${Math.round(pct * 100)}%`);
+        setProgress(`Paso 2/3: Compilando realidad aumentada... ${Math.round(pct * 100)}%`);
       });
 
-      setProgress('Paso 3/3: Subiendo target AR...');
+      setProgress('Paso 3/3: Subiendo target de realidad aumentada...');
       const mindFormData = new FormData();
       mindFormData.append('password', password);
       mindFormData.append('mindFile', mindBlob, 'target.mind');
@@ -99,10 +99,10 @@ export function EditMediaModal({ postcard, type, onClose, onSaved }: EditMediaMo
 
       if (mindData.success) {
         setProgressKind('success');
-        setProgress('¡Imagen y target AR actualizados!');
+        setProgress('¡Imagen y target de realidad aumentada actualizados!');
       } else {
         setProgressKind('error');
-        setProgress(`Imagen subida, error en AR: ${mindData.error}`);
+        setProgress(`Imagen subida, error en realidad aumentada: ${mindData.error}`);
       }
       setTimeout(() => {
         onSaved();
@@ -208,7 +208,7 @@ export function EditMediaModal({ postcard, type, onClose, onSaved }: EditMediaMo
             <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 text-xs">
               <AlertCircle className="size-4 shrink-0 mt-0.5" />
               <p>
-                Al cambiar la imagen se regenerará el target AR automáticamente. La postal estará
+                Al cambiar la imagen se regenerará el target de realidad aumentada automáticamente. La postal estará
                 en estado &quot;Procesando&quot; hasta que termine.
               </p>
             </div>

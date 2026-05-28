@@ -104,7 +104,7 @@ export async function validateImageFileEnhanced(
       
       // Advertencia para imágenes de baja resolución
       if (dimensions.width < 1024 || dimensions.height < 1024) {
-        warnings.push('La imagen tiene baja resolución. Para mejores resultados AR, usa imágenes de al menos 1024x1024px.');
+        warnings.push('La imagen tiene baja resolución. Para mejores resultados de realidad aumentada, usa imágenes de al menos 1024x1024px.');
       }
     } catch (error) {
       const detailedError = createDetailedError(
@@ -234,7 +234,7 @@ export async function validateVideoFile(
       
       // Warn about very short videos
       if (videoProperties.duration < 1) {
-        warnings.push('El video es muy corto (menos de 1 segundo). Considera usar un video más largo para mejor experiencia AR.');
+        warnings.push('El video es muy corto (menos de 1 segundo). Considera usar un video más largo para mejor experiencia de realidad aumentada.');
       }
       
       // Warn about high resolution videos
@@ -256,7 +256,7 @@ export async function validateVideoFile(
     const ENV_MAX_FILE_SIZE_MB = Number(process.env.NEXT_PUBLIC_MAX_FILE_SIZE_MB || '50');
     const recommendedMaxSize = (Number.isFinite(ENV_MAX_FILE_SIZE_MB) ? ENV_MAX_FILE_SIZE_MB : 50) * 1024 * 1024; // MB -> bytes
     if (file.size > recommendedMaxSize) {
-      warnings.push('Large video files may take longer to load in AR view');
+      warnings.push('Los videos grandes pueden tardar más en cargar en la vista de realidad aumentada');
     }
 
     return {

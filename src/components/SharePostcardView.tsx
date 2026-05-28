@@ -24,7 +24,7 @@ export function SharePostcardView({ postcard }: SharePostcardViewProps) {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `Postcard AR: ${postcard.title}`,
+          title: `Postcard de realidad aumentada: ${postcard.title}`,
           text: `¡Mira esta increíble postcard en realidad aumentada!`,
           url: shareUrl
         });
@@ -84,7 +84,7 @@ export function SharePostcardView({ postcard }: SharePostcardViewProps) {
               </CardDescription>
             </div>
             <Badge variant="secondary" className="bg-green-100 text-green-800">
-              Listo para AR
+              Listo para realidad aumentada
             </Badge>
           </div>
         </CardHeader>
@@ -109,7 +109,7 @@ export function SharePostcardView({ postcard }: SharePostcardViewProps) {
                 )}
               </div>
               <p className="text-sm text-muted-foreground text-center">
-                📱 Usa esta imagen como marcador AR
+                📱 Usa esta imagen como marcador de realidad aumentada
               </p>
             </div>
 
@@ -118,10 +118,10 @@ export function SharePostcardView({ postcard }: SharePostcardViewProps) {
               <div>
                 <h3 className="text-lg font-semibold mb-3">¿Cómo funciona?</h3>
                 <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
-                  <li>Haz clic en &quot;Abrir en AR&quot; desde tu móvil</li>
+                  <li>Haz clic en &quot;Abrir en realidad aumentada&quot; desde tu móvil</li>
                   <li>Permite el acceso a la cámara</li>
                   <li>Apunta la cámara hacia la imagen de arriba</li>
-                  <li>¡Disfruta de la experiencia AR!</li>
+                  <li>¡Disfruta de la experiencia de realidad aumentada!</li>
                 </ol>
               </div>
 
@@ -132,7 +132,7 @@ export function SharePostcardView({ postcard }: SharePostcardViewProps) {
                   size="lg"
                 >
                   <Camera className="h-5 w-5 mr-2" />
-                  Abrir en AR
+                  Abrir en realidad aumentada
                 </Button>
                 
                 <Button 
@@ -162,10 +162,10 @@ export function SharePostcardView({ postcard }: SharePostcardViewProps) {
 
       {/* Footer */}
       <div className="text-center text-muted-foreground text-sm">
-        <p>Creado con ❤️ usando Regaliz AR</p>
+        <p>Creado con ❤️ usando Regaliz</p>
         <p className="mt-1">
           <Link href="/" className="text-primary hover:text-primary/80">
-            Crea tu propia postcard AR
+            Crea tu propia postcard de realidad aumentada
           </Link>
         </p>
       </div>

@@ -71,7 +71,7 @@ export default function PostalesPage() {
   const copyToClipboard = useCallback((p: AdminPostcard) => {
     const cleanText = p.arLink.replace(/\s+/g, '').trim();
     void navigator.clipboard.writeText(cleanText);
-    toast({ title: 'Enlace copiado', description: 'El enlace AR se copió al portapapeles.' });
+    toast({ title: 'Enlace copiado', description: 'El enlace de realidad aumentada se copió al portapapeles.' });
   }, [toast]);
 
   const handleDownload = useCallback(async (p: AdminPostcard, kind: 'image' | 'video') => {
@@ -117,7 +117,7 @@ export default function PostalesPage() {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Postales</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Gestiona todas las postales AR creadas por tus clientes
+            Gestiona todas las postales de realidad aumentada creadas por tus clientes
           </p>
         </div>
         {userIdFilter && (
@@ -176,7 +176,7 @@ export default function PostalesPage() {
               description={
                 search || status !== 'all'
                   ? 'Prueba con otros filtros o limpia la búsqueda'
-                  : 'Cuando un cliente cree su primera postal AR aparecerá aquí'
+                  : 'Cuando un cliente cree su primera postal de realidad aumentada aparecerá aquí'
               }
               action={
                 search || status !== 'all'

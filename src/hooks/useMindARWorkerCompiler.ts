@@ -127,8 +127,8 @@ export function useMindARWorkerCompiler({
       onGenerationComplete?.();
 
       toast({
-        title: "¡Target AR generado!",
-        description: "Tu postal AR está lista.",
+        title: "¡Target de realidad aumentada generado!",
+        description: "Tu postal de realidad aumentada está lista.",
       });
 
     } catch (e) {
@@ -147,7 +147,7 @@ export function useMindARWorkerCompiler({
     generationTriggeredRef.current = false;
 
     toast({
-      title: "Error generando target AR",
+      title: "Error generando target de realidad aumentada",
       description: error,
       variant: "destructive",
     });

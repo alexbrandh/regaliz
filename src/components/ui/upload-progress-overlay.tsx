@@ -60,20 +60,20 @@ const STEPS_CONFIG: Record<Exclude<UploadStep, 'idle'>, StepConfig> = {
     estimatedTime: '~1-3 min',
   },
   'generating-nft': {
-    label: 'Generando experiencia AR',
+    label: 'Generando experiencia de realidad aumentada',
     description: 'Compilando tracking de imagen...',
     icon: <Sparkles className="h-4 w-4" />,
     estimatedTime: '~30 seg',
   },
   'uploading-nft': {
     label: 'Finalizando',
-    description: 'Subiendo datos AR...',
+    description: 'Subiendo datos de realidad aumentada...',
     icon: <Shield className="h-4 w-4" />,
     estimatedTime: '~5 seg',
   },
   completed: {
     label: '¡Postal creada!',
-    description: 'Tu postal AR está lista',
+    description: 'Tu postal de realidad aumentada está lista',
     icon: <CheckCircle className="h-4 w-4" />,
     estimatedTime: '',
   },
@@ -205,7 +205,7 @@ export function UploadProgressOverlay({
             <div className="px-6 pt-6 pb-4">
               <div className="flex items-center justify-between mb-1">
                 <h2 className="text-lg font-bold text-foreground">
-                  {currentStep === 'completed' ? '¡Listo!' : 'Creando tu postal AR'}
+                  {currentStep === 'completed' ? '¡Listo!' : 'Creando tu postal de realidad aumentada'}
                 </h2>
                 {canCancel && currentStep !== 'completed' && (
                   <Button
@@ -368,7 +368,7 @@ export function UploadProgressOverlay({
                   </motion.div>
                   <div>
                     <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
-                      ¡Tu postal AR está lista!
+                      ¡Tu postal de realidad aumentada está lista!
                     </p>
                     <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70">
                       Redirigiendo al panel...

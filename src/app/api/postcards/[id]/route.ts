@@ -99,9 +99,9 @@ async function handleGetPostcard(
       {
         id: postcard.id,
         status: postcard.processing_status,
-        message: postcard.processing_status === 'processing' 
-          ? 'Postcard is still being processed' 
-          : 'Postcard is not ready for realidad aumentada viewing',
+        message: postcard.processing_status === 'processing'
+          ? 'La postal aún se está procesando'
+          : 'La postal no está lista para verse en realidad aumentada',
         created_at: postcard.created_at
       }
     );

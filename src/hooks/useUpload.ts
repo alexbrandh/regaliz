@@ -67,7 +67,7 @@ export function useUpload(options: UseUploadOptions = {}) {
         const img = new Image();
         img.onload = () => {
           if (img.width < 800 || img.height < 800) {
-            resolve('Image resolution must be at least 800x800 pixels for optimal AR experience');
+            resolve('La resolución de la imagen debe ser al menos 800x800 píxeles para una experiencia óptima de realidad aumentada');
           } else {
             resolve(null);
           }

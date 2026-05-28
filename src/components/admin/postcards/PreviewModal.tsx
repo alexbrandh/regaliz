@@ -40,7 +40,7 @@ export function PreviewModal({ postcard, type, onClose, onDownload }: PreviewMod
           <div className="flex-1 min-w-0">
             <DialogTitle className="text-base truncate">{postcard.title}</DialogTitle>
             <p className="text-xs text-muted-foreground">
-              {type === 'image' ? 'Imagen de la postal' : 'Video de la experiencia AR'}
+              {type === 'image' ? 'Imagen de la postal' : 'Video de la experiencia de realidad aumentada'}
             </p>
           </div>
           <Button variant="outline" size="sm" onClick={() => onDownload(postcard, type)}>

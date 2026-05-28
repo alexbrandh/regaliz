@@ -25,8 +25,8 @@ interface DetailData extends AdminPostcard {
 const TIMELINE_LABELS: Record<string, string> = {
   created: 'Postal creada',
   updated: 'Postal actualizada',
-  first_view: 'Primera vista AR',
-  last_view: 'Última vista AR',
+  first_view: 'Primera vista de realidad aumentada',
+  last_view: 'Última vista de realidad aumentada',
 };
 
 export default function PostcardDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -147,7 +147,7 @@ export default function PostcardDetailPage({ params }: { params: Promise<{ id: s
           <Button asChild size="sm">
             <a href={data.arLink} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="size-4" />
-              Abrir AR
+              Abrir realidad aumentada
             </a>
           </Button>
         </div>
@@ -203,7 +203,7 @@ export default function PostcardDetailPage({ params }: { params: Promise<{ id: s
               </MetaRow>
               <MetaRow label="Creada">{formatDate(data.created_at, { withTime: true })}</MetaRow>
               <MetaRow label="Actualizada">{formatDate(data.updated_at, { withTime: true })}</MetaRow>
-              <MetaRow label="Vistas AR totales">
+              <MetaRow label="Vistas de realidad aumentada totales">
                 <span className="inline-flex items-center gap-1 font-medium">
                   <Eye className="size-3.5 text-muted-foreground" />
                   {data.ar_view_count}
@@ -270,7 +270,7 @@ export default function PostcardDetailPage({ params }: { params: Promise<{ id: s
           </div>
 
           <div className="bg-card border rounded-xl p-5">
-            <h2 className="font-semibold mb-3">Enlace AR</h2>
+            <h2 className="font-semibold mb-3">Enlace de realidad aumentada</h2>
             <div className="bg-muted/40 rounded-lg p-3 mb-3">
               <p className="text-xs font-mono break-all text-muted-foreground">{data.arLink}</p>
             </div>
@@ -285,7 +285,7 @@ export default function PostcardDetailPage({ params }: { params: Promise<{ id: s
               <h2 className="font-semibold mb-3">QR para compartir</h2>
               <div className="bg-white p-3 rounded-lg flex items-center justify-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={qrSrc} alt="QR del enlace AR" className="w-full max-w-[200px]" />
+                <img src={qrSrc} alt="QR del enlace de realidad aumentada" className="w-full max-w-[200px]" />
               </div>
               <Button
                 onClick={() => downloadFile(qrSrc, `${data.title}-qr.png`)}
@@ -361,7 +361,7 @@ function MediaCard({
 }) {
   return (
     <div className="bg-card border rounded-xl overflow-hidden flex flex-col">
-      <div className="aspect-[4/3] bg-muted relative flex items-center justify-center">
+      <div className="aspect-4/3 bg-muted relative flex items-center justify-center">
         {hasMedia ? (
           <button type="button" onClick={onPreview} className="block size-full">
             {children}

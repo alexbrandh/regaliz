@@ -223,7 +223,7 @@ export function useMindARBrowserCompiler({
       });
 
       // Step 3: Compile
-      setStatus({ state: 'compiling', progress: 0.15, message: 'Compilando target AR...' });
+      setStatus({ state: 'compiling', progress: 0.15, message: 'Compilando target de realidad aumentada...' });
 
       // Compile with progress callback
       const dataList = await compiler.compileImageTargets([img], (progress: number) => {
@@ -275,8 +275,8 @@ export function useMindARBrowserCompiler({
       });
 
       toast({
-        title: "¡Target AR generado!",
-        description: "Tu postal AR está lista para usar.",
+        title: "¡Target de realidad aumentada generado!",
+        description: "Tu postal de realidad aumentada está lista para usar.",
       });
 
       onGenerationComplete?.();
@@ -293,7 +293,7 @@ export function useMindARBrowserCompiler({
       generationTriggeredRef.current = false;
 
       toast({
-        title: "Error generando target AR",
+        title: "Error generando target de realidad aumentada",
         description: errorMessage,
         variant: "destructive",
       });

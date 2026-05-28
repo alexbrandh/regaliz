@@ -31,7 +31,7 @@ export function HeroCTAs() {
             <Link href="/dashboard/new">
               <Button size="lg" className="gap-2 text-lg px-8">
                 <Camera className="h-5 w-5" />
-                Crear Postal AR
+                Crear Postal de realidad aumentada
               </Button>
             </Link>
           </SignedIn>

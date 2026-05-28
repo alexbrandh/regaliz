@@ -38,8 +38,8 @@ export const ERROR_MESSAGES = {
     severity: 'medium' as const
   },
   IMAGE_TOO_SMALL: {
-    message: 'Imagen muy pequeña para AR',
-    userMessage: 'La imagen debe tener al menos 800x800 píxeles para funcionar bien en AR',
+    message: 'Imagen muy pequeña para realidad aumentada',
+    userMessage: 'La imagen debe tener al menos 800x800 píxeles para funcionar bien en realidad aumentada',
     severity: 'medium' as const
   },
   
@@ -85,7 +85,7 @@ export const ERROR_MESSAGES = {
   // NFT generation errors
   NFT_GENERATION_FAILED: {
     message: 'Error al generar descriptores NFT',
-    userMessage: 'Error al procesar la imagen para AR. Intenta con una imagen diferente',
+    userMessage: 'Error al procesar la imagen para realidad aumentada. Intenta con una imagen diferente',
     severity: 'high' as const
   },
   NFT_PROCESSING_TIMEOUT: {

@@ -34,7 +34,7 @@ export default async function Image() {
             alignItems: 'center',
           }}
         >
-          <span>Crea postales AR</span>
+          <span>Crea postales de realidad aumentada</span>
           <span style={{ color: '#F47B6B', marginTop: 8 }}>que cobran vida</span>
         </div>
         <div

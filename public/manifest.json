@@ -1,7 +1,7 @@
 {
-  "name": "Regaliz - Dulce Felicidad en AR",
+  "name": "Regaliz - Dulce Felicidad en realidad aumentada",
   "short_name": "Regaliz",
-  "description": "Crea experiencias AR mágicas que cobran vida. Transforma tus recuerdos en momentos memorables.",
+  "description": "Crea experiencias de realidad aumentada mágicas que cobran vida. Transforma tus recuerdos en momentos memorables.",
   "start_url": "/",
   "id": "/",
   "display": "standalone",
@@ -32,7 +32,7 @@
     {
       "name": "Crear Postal",
       "short_name": "Crear",
-      "description": "Crea una nueva postal AR",
+      "description": "Crea una nueva postal de realidad aumentada",
       "url": "/dashboard/new",
       "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
     },

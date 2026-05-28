@@ -106,7 +106,7 @@ export default function NewPostcard() {
 
       toast({
         title: "¡Postal creada!",
-        description: "Tu postal AR está lista para usar con MindAR.",
+        description: "Tu postal de realidad aumentada está lista para usar.",
       });
 
       logger.info('Postal completada con MindAR', {
@@ -130,7 +130,7 @@ export default function NewPostcard() {
 
       toast({
         title: "¡Postal creada!",
-        description: "Tu postal fue creada. El target AR se está procesando.",
+        description: "Tu postal fue creada. El target de realidad aumentada se está procesando.",
       });
       
       setTimeout(() => {
@@ -335,7 +335,7 @@ export default function NewPostcard() {
     if (img.width < MIN_IMAGE_RESOLUTION || img.height < MIN_IMAGE_RESOLUTION) {
       toast({
         title: 'Resolución muy baja',
-        description: `La imagen recortada debe ser al menos ${MIN_IMAGE_RESOLUTION}x${MIN_IMAGE_RESOLUTION}px para buen tracking AR.`,
+        description: `La imagen recortada debe ser al menos ${MIN_IMAGE_RESOLUTION}x${MIN_IMAGE_RESOLUTION}px para buen tracking de realidad aumentada.`,
         variant: 'destructive',
       });
       return;
@@ -645,7 +645,7 @@ export default function NewPostcard() {
                 onCancel={handleCropCancel}
                 minWidth={MIN_IMAGE_RESOLUTION}
                 minHeight={MIN_IMAGE_RESOLUTION}
-                title="Recortar Imagen para Postal AR"
+                title="Recortar Imagen para Postal de realidad aumentada"
                 description="Selecciona el área de la imagen y la proporción deseada (16:9 o 4:5)"
               />
             </div>
@@ -662,7 +662,7 @@ export default function NewPostcard() {
             <div className="text-center">
               <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Crear Nueva Postal</h1>
               <p className="text-muted-foreground mt-2 max-w-md mx-auto text-sm sm:text-base">
-                Sube una imagen y video para crear tu experiencia AR interactiva
+                Sube una imagen y video para crear tu experiencia de realidad aumentada interactiva
               </p>
             </div>
           </div>
@@ -732,13 +732,13 @@ export default function NewPostcard() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <ImageIcon className="h-5 w-5" />
-                  Imagen Objetivo AR *
+                  Imagen Objetivo de realidad aumentada *
                   <Tooltip>
                     <TooltipTrigger>
                       <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Esta imagen será detectada por la cámara para activar el contenido AR. Usa imágenes con buen contraste, detalles únicos y evita superficies brillantes o reflectantes.</p>
+                      <p>Esta imagen será detectada por la cámara para activar el contenido de realidad aumentada. Usa imágenes con buen contraste, detalles únicos y evita superficies brillantes o reflectantes.</p>
                     </TooltipContent>
                   </Tooltip>
                 </CardTitle>
@@ -766,7 +766,7 @@ export default function NewPostcard() {
                   isUploading={currentStep === 'uploading-image'}
                   uploadProgress={currentStep === 'uploading-image' ? uploadProgress : undefined}
                   title="Sube tu imagen"
-                  description="Esta imagen activará tu contenido AR"
+                  description="Esta imagen activará tu contenido de realidad aumentada"
                   supportedFormats="JPG, PNG"
                   disabled={currentStep !== 'idle'}
                 />
@@ -778,13 +778,13 @@ export default function NewPostcard() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Video className="h-5 w-5" />
-                  Contenido de Video AR *
+                  Contenido de Video de realidad aumentada *
                   <Tooltip>
                     <TooltipTrigger>
                       <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Este video aparecerá flotando sobre la imagen cuando sea detectada. Usa buena calidad para la mejor experiencia AR.</p>
+                      <p>Este video aparecerá flotando sobre la imagen cuando sea detectada. Usa buena calidad para la mejor experiencia de realidad aumentada.</p>
                     </TooltipContent>
                   </Tooltip>
                 </CardTitle>
@@ -812,7 +812,7 @@ export default function NewPostcard() {
                   isUploading={currentStep === 'uploading-video'}
                   uploadProgress={currentStep === 'uploading-video' ? uploadProgress : undefined}
                   title="Sube tu video"
-                  description="Este video aparecerá sobre la imagen AR"
+                  description="Este video aparecerá sobre la imagen de realidad aumentada"
                   supportedFormats="MP4, MOV"
                   disabled={currentStep !== 'idle'}
                 />
@@ -825,7 +825,7 @@ export default function NewPostcard() {
                 <div className="flex items-start gap-3">
                   <AlertCircle className="h-5 w-5 text-primary mt-0.5 shrink-0" />
                   <div className="space-y-2">
-                    <h4 className="font-medium text-foreground">Requisitos para la Mejor Experiencia AR</h4>
+                    <h4 className="font-medium text-foreground">Requisitos para la Mejor Experiencia de realidad aumentada</h4>
                     <ul className="text-sm text-foreground/80 space-y-1">
                       <li>• Usa imágenes de alto contraste con detalles claros</li>
                       <li>• Evita superficies reflectantes o transparentes</li>
@@ -864,13 +864,13 @@ export default function NewPostcard() {
                     ) : (
                       <>
                         <CheckCircle className="mr-2 h-4 w-4" />
-                        Crear Postal AR
+                        Crear Postal de realidad aumentada
                       </>
                     )}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Se requiere título, imagen y video para crear la postal AR</p>
+                  <p>Se requiere título, imagen y video para crear la postal de realidad aumentada</p>
                 </TooltipContent>
               </Tooltip>
             </div>

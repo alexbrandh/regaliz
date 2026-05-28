@@ -77,7 +77,7 @@ export function SharePostcard({ postcardId, title, className }: SharePostcardPro
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `Postcard AR: ${title}`,
+          title: `Postcard de realidad aumentada: ${title}`,
           text: `¡Mira esta increíble postcard en realidad aumentada!`,
           url: arUrl
         });
@@ -118,7 +118,7 @@ export function SharePostcard({ postcardId, title, className }: SharePostcardPro
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Compartir Postcard AR</DialogTitle>
+          <DialogTitle>Compartir Postcard de realidad aumentada</DialogTitle>
           <DialogDescription>
             Comparte tu postcard en realidad aumentada con otros
           </DialogDescription>
@@ -136,7 +136,7 @@ export function SharePostcard({ postcardId, title, className }: SharePostcardPro
 
           {/* URL del visor AR */}
           <div className="flex flex-col space-y-2">
-            <Label htmlFor="ar-url">Enlace del visor AR</Label>
+            <Label htmlFor="ar-url">Enlace del visor de realidad aumentada</Label>
             <div className="flex space-x-2">
               <Input
                 id="ar-url"
@@ -147,7 +147,7 @@ export function SharePostcard({ postcardId, title, className }: SharePostcardPro
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => copyToClipboard(arUrl, 'Enlace AR')}
+                onClick={() => copyToClipboard(arUrl, 'Enlace de realidad aumentada')}
               >
                 {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               </Button>

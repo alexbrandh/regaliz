@@ -42,7 +42,7 @@ export default function UsersPage() {
       <header>
         <h1 className="text-2xl font-semibold tracking-tight">Usuarios</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Clientes que han creado al menos una postal AR
+          Clientes que han creado al menos una postal de realidad aumentada
         </p>
       </header>
 
