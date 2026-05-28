@@ -312,15 +312,17 @@ export default function PostcardDetailPage() {
               </div>
             </header>
 
-            {/* Main grid: previews + actions */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6">
-              {/* Imagen Target */}
-              <div className="lg:col-span-5">
+            {(() => {
+              const needsActivation =
+                postcard.status === 'ready' && !postcard.is_activated;
+
+              const imageTarget = (
                 <MediaCard label="Imagen Target" icon={<ImageIcon className="h-4 w-4" />}>
-                  <div className="relative h-[380px] md:h-[440px] overflow-hidden">
+                  <div
+                    className={`relative ${needsActivation ? 'h-[280px] md:h-[320px]' : 'h-[380px] md:h-[440px]'} overflow-hidden`}
+                  >
                     {postcard.image_url && isValidImageUrl(postcard.image_url) ? (
                       <>
-                        {/* Fondo blurreado de la propia imagen */}
                         <Image
                           src={postcard.image_url}
                           alt=""
@@ -329,7 +331,6 @@ export default function PostcardDetailPage() {
                           className="object-cover scale-110 blur-2xl opacity-40"
                         />
                         <div className="absolute inset-0 bg-black/20" />
-                        {/* Imagen real con aspect ratio respetado */}
                         <Image
                           src={postcard.image_url}
                           alt={postcard.title || 'Imagen de la postal'}
@@ -347,12 +348,16 @@ export default function PostcardDetailPage() {
                     )}
                   </div>
                 </MediaCard>
-              </div>
+              );
 
-              {/* Video AR */}
-              <div className="lg:col-span-4">
-                <MediaCard label="Video de realidad aumentada" icon={<Video className="h-4 w-4" />}>
-                  <div className="relative h-[380px] md:h-[440px] bg-black overflow-hidden">
+              const videoBlock = (
+                <MediaCard
+                  label="Video de realidad aumentada"
+                  icon={<Video className="h-4 w-4" />}
+                >
+                  <div
+                    className={`relative ${needsActivation ? 'h-[280px] md:h-[320px]' : 'h-[380px] md:h-[440px]'} bg-black overflow-hidden`}
+                  >
                     {postcard.video_url ? (
                       <>
                         <video
@@ -389,27 +394,44 @@ export default function PostcardDetailPage() {
                     )}
                   </div>
                 </MediaCard>
-              </div>
+              );
 
-              {/* Action panel */}
-              <div className="lg:col-span-3">
-                {postcard.status === 'ready' && !postcard.is_activated ? (
-                  <ActivationCTA postcardId={postcard.id} />
-                ) : (
-                  <ActionPanel
-                    isReady={isReady}
-                    status={postcard.status}
-                    postcardId={postcard.id}
-                    qrCodeUrl={qrCodeUrl}
-                    hasImage={!!postcard.image_url}
-                    hasVideo={!!postcard.video_url}
-                    onShare={handleShare}
-                    onDownload={handleDownload}
-                    onOpenQrDialog={() => setShowQrDialog(true)}
-                  />
-                )}
-              </div>
-            </div>
+              if (needsActivation) {
+                return (
+                  <div className="space-y-5 lg:space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
+                      {imageTarget}
+                      {videoBlock}
+                    </div>
+                    <ActivationCTA
+                      postcardId={postcard.id}
+                      postcardTitle={postcard.title}
+                      imageUrl={postcard.image_url}
+                    />
+                  </div>
+                );
+              }
+
+              return (
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6">
+                  <div className="lg:col-span-5">{imageTarget}</div>
+                  <div className="lg:col-span-4">{videoBlock}</div>
+                  <div className="lg:col-span-3">
+                    <ActionPanel
+                      isReady={isReady}
+                      status={postcard.status}
+                      postcardId={postcard.id}
+                      qrCodeUrl={qrCodeUrl}
+                      hasImage={!!postcard.image_url}
+                      hasVideo={!!postcard.video_url}
+                      onShare={handleShare}
+                      onDownload={handleDownload}
+                      onOpenQrDialog={() => setShowQrDialog(true)}
+                    />
+                  </div>
+                </div>
+              );
+            })()}
           </div>
 
           {/* QR Dialog */}
