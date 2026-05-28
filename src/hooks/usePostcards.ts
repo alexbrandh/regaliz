@@ -124,12 +124,13 @@ export function usePostcards() {
 
           const url = forceCacheBust ? `/api/postcards?t=${Date.now()}` : '/api/postcards';
 
+          // No Content-Type on GET — it forces a CORS preflight on cross-origin
+          // and is meaningless without a body. No client Cache-Control either:
+          // request headers don't control response caching; the server sets
+          // Cache-Control on the response.
           const response = await fetch(url, {
             method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Cache-Control': forceCacheBust ? 'no-cache, no-store, must-revalidate' : 'public, max-age=60',
-            },
+            cache: forceCacheBust ? 'no-store' : 'default',
             signal: managedController.controller.signal,
           });
 

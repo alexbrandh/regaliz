@@ -17,7 +17,9 @@ export function useVideoTexture({ src, autoplay = true }: Options) {
     v.loop = true;
     v.playsInline = true;
     v.crossOrigin = 'anonymous';
-    v.preload = 'metadata';
+    // Don't preload the bytes — let play() trigger the fetch when the phone
+    // actually enters the viewport. Keeps hero.mp4 (~1MB) off the LCP path.
+    v.preload = 'none';
     return v;
   }, [src]);
 

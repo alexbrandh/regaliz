@@ -138,5 +138,3 @@ export function PhoneModel({ scrollProgress, isMobile }: Props) {
     </group>
   );
 }
-
-useGLTF.preload(MODEL_URL);

@@ -1,7 +1,8 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion';
+import Image from 'next/image';
+import { m, useScroll, useTransform, type MotionValue } from 'framer-motion';
 import { Camera, Zap, Share2, type LucideIcon } from 'lucide-react';
 
 type Step = {
@@ -11,8 +12,9 @@ type Step = {
   title: string;
   titleAccent: string;
   description: string;
-  video: string;
-  poster: string;
+  /** Optional — drop the field (or leave empty) until the asset exists in /public/videos. */
+  video?: string;
+  poster?: string;
   screenBg: string;
   iconColor: string;
 };
@@ -26,8 +28,7 @@ const steps: Step[] = [
     titleAccent: 'contenido.',
     description:
       'Elige una foto como objetivo de realidad aumentada y sube un video que se reproducirá cuando alguien la escanee con su cámara.',
-    video: '/videos/how-it-works-step-1.mp4',
-    poster: '/videos/how-it-works-step-1.jpg',
+    // video: '/videos/how-it-works-step-1.mp4' (pendiente de producción)
     screenBg:
       'linear-gradient(180deg, oklch(0.95 0.04 25) 0%, oklch(0.82 0.10 25) 100%)',
     iconColor: 'oklch(0.72 0.14 25)',
@@ -40,8 +41,7 @@ const steps: Step[] = [
     titleAccent: 'la magia.',
     description:
       'Nuestra inteligencia artificial genera marcadores de seguimiento de realidad aumentada desde tu foto para un reconocimiento perfecto.',
-    video: '/videos/how-it-works-step-2.mp4',
-    poster: '/videos/how-it-works-step-2.jpg',
+    // video: '/videos/how-it-works-step-2.mp4' (pendiente de producción)
     screenBg:
       'linear-gradient(180deg, oklch(0.92 0.05 295) 0%, oklch(0.55 0.12 295) 100%)',
     iconColor: 'oklch(0.55 0.12 295)',
@@ -54,8 +54,7 @@ const steps: Step[] = [
     titleAccent: 'vive la realidad aumentada.',
     description:
       'Comparte el enlace de tu postal de realidad aumentada. Cualquiera puede apuntar su cámara y ver tu video cobrar vida sobre la foto.',
-    video: '/videos/how-it-works-step-3.mp4',
-    poster: '/videos/how-it-works-step-3.jpg',
+    // video: '/videos/how-it-works-step-3.mp4' (pendiente de producción)
     screenBg:
       'linear-gradient(180deg, oklch(0.93 0.04 190) 0%, oklch(0.50 0.10 220) 100%)',
     iconColor: 'oklch(0.55 0.10 220)',
@@ -85,7 +84,7 @@ export function HowItWorksSection() {
       <div className="h-12 md:h-20" aria-hidden />
       {/* Header */}
       <div className="container mx-auto px-4 pt-24 pb-8 md:pt-32 md:pb-16 text-center">
-        <motion.span
+        <m.span
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
@@ -93,8 +92,8 @@ export function HowItWorksSection() {
           className="inline-block px-4 py-1.5 mb-6 text-sm font-semibold text-primary bg-primary/10 rounded-full"
         >
           Simple y Poderoso
-        </motion.span>
-        <motion.h2
+        </m.span>
+        <m.h2
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
@@ -102,8 +101,8 @@ export function HowItWorksSection() {
           className="text-4xl md:text-6xl font-bold tracking-tight text-foreground mb-6"
         >
           Cómo Funciona
-        </motion.h2>
-        <motion.p
+        </m.h2>
+        <m.p
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
@@ -112,7 +111,7 @@ export function HowItWorksSection() {
         >
           Crea experiencias de realidad aumentada impresionantes en solo{' '}
           <span className="text-primary font-semibold">3 pasos simples</span>
-        </motion.p>
+        </m.p>
       </div>
 
       {/* Desktop: alternating columns with sticky phone in the middle */}
@@ -154,13 +153,13 @@ export function HowItWorksSection() {
           </div>
           <div className="grid w-full max-w-md">
             {steps.map((step, i) => (
-              <motion.div
+              <m.div
                 key={step.number}
                 style={{ opacity: opacities[i] }}
                 className="col-start-1 row-start-1 px-2"
               >
                 <TextBlock step={step} compact />
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -232,7 +231,7 @@ function PhoneMockup({ opacities }: { opacities: MotionValue<number>[] }) {
           ellipse of the rectangle stays inside the frame's screen cutout. */}
       <div className="absolute top-[2.6%] bottom-[2.6%] left-[6%] right-[6%] overflow-hidden rounded-[11%] bg-black">
         {steps.map((step, i) => (
-          <motion.div
+          <m.div
             key={step.number}
             style={{ opacity: opacities[i] }}
             className="absolute inset-0"
@@ -241,28 +240,34 @@ function PhoneMockup({ opacities }: { opacities: MotionValue<number>[] }) {
               className="absolute inset-0"
               style={{ background: step.screenBg }}
             />
-            <video
-              className="absolute inset-0 h-full w-full object-cover"
-              src={step.video}
-              poster={step.poster}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-hidden="true"
-            />
-          </motion.div>
+            {step.video && (
+              <video
+                className="absolute inset-0 h-full w-full object-cover"
+                src={step.video}
+                poster={step.poster}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-hidden="true"
+              />
+            )}
+          </m.div>
         ))}
       </div>
 
       {/* iPhone frame on top */}
-      <img
+      <Image
         src="/image_.webp"
         alt=""
         aria-hidden="true"
+        width={640}
+        height={1336}
+        sizes="(max-width: 768px) 200px, 320px"
         className="pointer-events-none absolute inset-0 h-full w-full select-none"
         draggable={false}
+        priority
       />
     </div>
   );

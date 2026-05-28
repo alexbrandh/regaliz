@@ -118,24 +118,24 @@ const PostcardCard = memo(({ postcard, onDelete, onNavigate }: PostcardCardProps
       
       <CardContent className="p-4 pt-0 space-y-3">
         {/* Image Preview */}
-        <div className="relative aspect-video bg-muted rounded-xl overflow-hidden ring-1 ring-border">
+        <div className="relative bg-muted rounded-xl overflow-hidden ring-1 ring-border">
           {postcard.image_url && isValidImageUrl(postcard.image_url) ? (
             <Image
               src={postcard.image_url}
               alt={postcard.title}
-              fill
-              className="object-cover transition-transform duration-200 group-hover:scale-105"
+              width={1200}
+              height={1200}
+              className="w-full h-auto object-contain transition-transform duration-200 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               loading="lazy"
-              unoptimized={true} // ✅ Deshabilitando optimización para URLs firmadas de Supabase
               onError={(e) => handleImageError(postcard.image_url, e.target as HTMLImageElement)}
             />
           ) : (
-            <div className="flex items-center justify-center h-full">
+            <div className="flex items-center justify-center aspect-video">
               <ImageIcon className="h-12 w-12 text-muted-foreground/50" />
             </div>
           )}
-          
+
           {/* Processing Progress Overlay */}
           {postcard.processing_status === 'processing' && (
             <div className="absolute inset-0 bg-black/50 flex items-center justify-center">

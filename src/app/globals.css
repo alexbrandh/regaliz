@@ -17,7 +17,7 @@
     content: '';
     position: fixed;
     inset: 0;
-    background-image: url('/textura-fondo.png');
+    background-image: url('/textura-fondo.webp');
     background-repeat: cover;
     background-position: center;
     background-size: 1800px;

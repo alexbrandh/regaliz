@@ -9,7 +9,16 @@ const nextConfig = {
   generateEtags: true,
 
   experimental: {
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons', 'react-icons'],
+    optimizePackageImports: [
+      'lucide-react',
+      '@radix-ui/react-icons',
+      'react-icons',
+      'framer-motion',
+      '@react-three/drei',
+      '@react-three/fiber',
+      'sonner',
+      '@clerk/nextjs',
+    ],
   },
 
   turbopack: {},
@@ -26,8 +35,16 @@ const nextConfig = {
           { key: 'Cross-Origin-Resource-Policy', value: 'cross-origin' },
         ],
       },
+      // Webhooks and mutation endpoints must never be cached. Read endpoints
+      // can set their own Cache-Control inside the route handler.
       {
-        source: '/api/(.*)',
+        source: '/api/webhooks/(.*)',
+        headers: [
+          { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' },
+        ],
+      },
+      {
+        source: '/api/checkout/(.*)',
         headers: [
           { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' },
         ],

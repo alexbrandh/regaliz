@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PostcardCard } from '@/components/PostcardCard';
 import { DashboardStats } from '@/components/DashboardStats';
+import { DashboardSkeleton } from '@/components/DashboardSkeleton';
 import { Plus, Camera, Search, Filter, RefreshCw, XCircle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Input } from '@/components/ui/input';
@@ -90,16 +91,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <MainLayout>
-        <div className="min-h-screen bg-linear-to-b from-muted/30 to-background">
-          <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6 md:py-8">
-            <div className="flex items-center justify-center min-h-[400px]">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-                <p className="text-muted-foreground">Cargando tus postales...</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <DashboardSkeleton />
       </MainLayout>
     );
   }

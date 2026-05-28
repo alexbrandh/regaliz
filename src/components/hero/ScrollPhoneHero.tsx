@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { m, useScroll, useTransform } from 'framer-motion';
 import { PhoneSkeleton } from './PhoneSkeleton';
 
 const Phone3D = dynamic(() => import('./Phone3D'), {
@@ -38,6 +38,13 @@ export function ScrollPhoneHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const isMobile = useIsMobile();
   const reducedMotion = usePrefersReducedMotion();
+  // Defer Phone3D one paint cycle so the title + skeleton hit the screen
+  // before three/drei/GLB/HDR start downloading. Lets the title win LCP.
+  const [phoneReady, setPhoneReady] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setPhoneReady(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -61,15 +68,15 @@ export function ScrollPhoneHero() {
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         {/* Phone canvas — fills full viewport so the zoom-out has room to breathe */}
         <div className="absolute inset-0">
-          {!reducedMotion && (
+          {!reducedMotion && phoneReady && (
             <Phone3D scrollProgress={scrollYProgress} isMobile={isMobile} />
           )}
-          {reducedMotion && <PhoneSkeleton />}
+          {(reducedMotion || !phoneReady) && <PhoneSkeleton />}
         </div>
 
         {/* Title overlay — vertically centered over the phone screen during the screen-fill phase */}
         <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-4">
-          <motion.h1
+          <m.h1
             className="text-center font-bold tracking-tighter text-white text-[clamp(2rem,7vw,4.5rem)] leading-[0.95] drop-shadow-[0_2px_24px_rgba(0,0,0,0.5)]"
             style={
               reducedMotion ? undefined : { opacity: titleOpacity, y: titleY }
@@ -79,7 +86,7 @@ export function ScrollPhoneHero() {
             <span className="bg-linear-to-r from-primary to-ring bg-clip-text text-transparent">
               .
             </span>
-          </motion.h1>
+          </m.h1>
         </div>
       </div>
     </section>
