@@ -35,16 +35,13 @@ const nextConfig = {
           { key: 'Cross-Origin-Resource-Policy', value: 'cross-origin' },
         ],
       },
-      // Webhooks and mutation endpoints must never be cached. Read endpoints
-      // can set their own Cache-Control inside the route handler.
+      // All API routes are dynamic and per-request. The blanket no-cache
+      // prevents Vercel's edge from caching 404 responses that come from
+      // Clerk middleware rewrites — those were sticking and serving stale
+      // 404s on /api/postcards/[id] even after deploy invalidation. Routes
+      // that want caching opt in via Cache-Control inside the route handler.
       {
-        source: '/api/webhooks/(.*)',
-        headers: [
-          { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' },
-        ],
-      },
-      {
-        source: '/api/checkout/(.*)',
+        source: '/api/(.*)',
         headers: [
           { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' },
         ],
