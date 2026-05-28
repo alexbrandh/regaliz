@@ -1,10 +1,12 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
+// Routes whose handlers do NOT have their own auth guard.
+// /api/postcards POST is already wrapped in withAuth, so it's NOT here.
+// /api/postcards/[id] GET is public (AR viewer) — also NOT here.
 const isProtectedRoute = createRouteMatcher([
   '/dashboard(.*)',
-  '/api/postcards$', // Solo proteger POST /api/postcards (crear)
-  '/api/nft(.*)'
+  '/api/nft(.*)',
 ])
 
 export default clerkMiddleware(async (auth, req) => {

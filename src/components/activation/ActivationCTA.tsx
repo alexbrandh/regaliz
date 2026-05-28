@@ -87,7 +87,7 @@ export function ActivationCTA({ postcardId, postcardTitle, imageUrl }: Activatio
   const swatch = COLOR_SWATCHES[color];
 
   return (
-    <Card className="overflow-hidden rounded-3xl border-primary/20 bg-linear-to-br from-primary/[0.04] via-card to-ring/[0.04] shadow-xl shadow-primary/5">
+    <Card className="overflow-hidden rounded-3xl border-primary/20 bg-linear-to-br from-primary/4 via-card to-ring/4 shadow-xl shadow-primary/5">
       {/* Header */}
       <div className="px-6 md:px-10 pt-7 md:pt-10 pb-5 md:pb-6 border-b border-border/40">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
@@ -364,7 +364,7 @@ function PhysicalMockup({
 
       {/* Postcard mockup */}
       <div
-        className="relative aspect-[4/5] w-full max-w-md mx-auto rounded-3xl shadow-2xl transition-all duration-500 ease-out"
+        className="relative aspect-4/5 w-full max-w-md mx-auto rounded-3xl shadow-2xl transition-all duration-500 ease-out"
         style={{
           background: swatch.cardBg,
           border: `1px solid ${swatch.cardBorder}`,
@@ -449,7 +449,7 @@ function DigitalMockup({
       </div>
 
       {/* Phone frame */}
-      <div className="relative mx-auto w-full max-w-[280px] aspect-[9/19] rounded-[2.5rem] bg-foreground p-2 shadow-2xl">
+      <div className="relative mx-auto w-full max-w-[280px] aspect-9/19 rounded-[2.5rem] bg-foreground p-2 shadow-2xl">
         <div className="relative h-full w-full rounded-[2rem] overflow-hidden bg-black">
           {imageUrl ? (
             <>
