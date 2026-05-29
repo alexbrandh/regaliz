@@ -186,52 +186,19 @@ export default function PostcardDetailPage() {
     }
   };
 
-  const handleDownload = async (kind: 'image' | 'video') => {
+  const handleDownload = (kind: 'image' | 'video') => {
     if (!postcard) return;
-
-    if (kind === 'video' && postcard.video_url) {
-      const link = document.createElement('a');
+    const link = document.createElement('a');
+    if (kind === 'image' && postcard.image_url) {
+      link.href = postcard.image_url;
+      link.download = `${postcard.title || 'postal'}-imagen.jpg`;
+    } else if (kind === 'video' && postcard.video_url) {
       link.href = postcard.video_url;
       link.download = `${postcard.title || 'postal'}-video.mp4`;
-      link.click();
+    } else {
       return;
     }
-
-    if (kind !== 'image' || !postcard.image_url) return;
-
-    const baseName = postcard.title || 'postal';
-
-    if (!qrCodeUrl) {
-      const link = document.createElement('a');
-      link.href = postcard.image_url;
-      link.download = `${baseName}-imagen.jpg`;
-      link.click();
-      return;
-    }
-
-    const toastId = toast.loading('Preparando imagen con QR...');
-    try {
-      const blobUrl = await composeTargetWithQr(
-        postcard.image_url,
-        qrCodeUrl,
-        baseName,
-      );
-      const link = document.createElement('a');
-      link.href = blobUrl;
-      link.download = `${baseName}-imagen-qr.jpg`;
-      link.click();
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
-      toast.success('Imagen lista', { id: toastId });
-    } catch (err) {
-      console.error('Error composing target with QR, falling back to raw image:', err);
-      const link = document.createElement('a');
-      link.href = postcard.image_url;
-      link.download = `${baseName}-imagen.jpg`;
-      link.click();
-      toast.error('No pudimos generar la imagen con QR, descargamos la original', {
-        id: toastId,
-      });
-    }
+    link.click();
   };
 
   if (loading) {
@@ -372,7 +339,7 @@ export default function PostcardDetailPage() {
                       ? () => handleDownload('image')
                       : undefined
                   }
-                  downloadLabel="Descargar imagen con QR"
+                  downloadLabel="Descargar imagen target"
                 >
                   <div
                     className={`relative ${needsActivation ? 'h-[280px] md:h-[320px]' : 'h-[380px] md:h-[440px]'} overflow-hidden`}
@@ -796,7 +763,7 @@ function ActionPanel({
                   Descargar archivos
                 </h3>
                 <p className="text-xs text-muted-foreground/80 leading-relaxed">
-                  La imagen se descarga con el código QR incluido, lista para imprimir y activar la realidad aumentada.
+                  La imagen target se descarga sin modificar para que la realidad aumentada pueda reconocerla al escanearla. El QR está disponible aparte arriba.
                 </p>
               </div>
               <div className="space-y-1.5">
@@ -807,7 +774,7 @@ function ActionPanel({
                     className="w-full justify-start gap-2 h-11 font-medium border-primary/30 bg-primary/5 hover:bg-primary/10 hover:border-primary/50 text-foreground"
                   >
                     <ImageIcon className="h-4 w-4 text-primary" />
-                    <span className="flex-1 text-left">Descargar imagen con QR</span>
+                    <span className="flex-1 text-left">Descargar imagen target</span>
                     <Download className="h-4 w-4 opacity-60" />
                   </Button>
                 )}
@@ -877,86 +844,3 @@ function TwitterIcon({ className }: { className?: string }) {
   );
 }
 
-function loadImage(src: string, crossOrigin: boolean): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new window.Image();
-    if (crossOrigin) img.crossOrigin = 'anonymous';
-    img.onload = () => resolve(img);
-    img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
-    img.src = src;
-  });
-}
-
-async function composeTargetWithQr(
-  imageUrl: string,
-  qrDataUrl: string,
-  title: string,
-): Promise<string> {
-  const [targetImg, qrImg] = await Promise.all([
-    loadImage(imageUrl, true),
-    loadImage(qrDataUrl, false),
-  ]);
-
-  const W = targetImg.naturalWidth;
-  const targetH = targetImg.naturalHeight;
-  const padding = Math.round(W * 0.04);
-  const qrSize = Math.round(W * 0.32);
-  const captionGap = Math.round(W * 0.025);
-  const captionSize = Math.round(W * 0.028);
-  const subCaptionSize = Math.round(W * 0.022);
-  const stripH = qrSize + captionGap + captionSize + captionGap + subCaptionSize + padding;
-
-  const canvas = document.createElement('canvas');
-  canvas.width = W + padding * 2;
-  canvas.height = padding + targetH + stripH + padding;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) throw new Error('No 2d context available');
-
-  ctx.fillStyle = '#FFFFFF';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.drawImage(targetImg, padding, padding, W, targetH);
-
-  const sepY = padding + targetH + Math.round(padding * 0.6);
-  ctx.strokeStyle = '#E5E7EB';
-  ctx.lineWidth = Math.max(1, Math.round(W * 0.0015));
-  ctx.beginPath();
-  ctx.moveTo(padding, sepY);
-  ctx.lineTo(padding + W, sepY);
-  ctx.stroke();
-
-  const qrX = (canvas.width - qrSize) / 2;
-  const qrY = sepY + Math.round(padding * 0.6);
-  ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
-
-  ctx.fillStyle = '#111827';
-  ctx.font = `600 ${captionSize}px system-ui, -apple-system, "Segoe UI", sans-serif`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'top';
-  ctx.fillText(
-    'Escanea para ver en realidad aumentada',
-    canvas.width / 2,
-    qrY + qrSize + captionGap,
-  );
-
-  if (title) {
-    ctx.fillStyle = '#6B7280';
-    ctx.font = `400 ${subCaptionSize}px system-ui, -apple-system, "Segoe UI", sans-serif`;
-    ctx.fillText(
-      title,
-      canvas.width / 2,
-      qrY + qrSize + captionGap + captionSize + captionGap,
-    );
-  }
-
-  return new Promise((resolve, reject) => {
-    canvas.toBlob(
-      (blob) => {
-        if (!blob) return reject(new Error('canvas.toBlob returned null'));
-        resolve(URL.createObjectURL(blob));
-      },
-      'image/jpeg',
-      0.92,
-    );
-  });
-}
