@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { createBrowserClient } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/client';
 
 interface UseSignedUrlOptions {
   bucket: string;
@@ -36,7 +36,7 @@ export function useSignedUrl({
     setError(null);
 
     try {
-      const supabase = createBrowserClient();
+      const supabase = createClient();
       const { data, error: supabaseError } = await supabase.storage
         .from(bucket)
         .createSignedUrl(path, expiresIn);
