@@ -186,19 +186,52 @@ export default function PostcardDetailPage() {
     }
   };
 
-  const handleDownload = (kind: 'image' | 'video') => {
+  const handleDownload = async (kind: 'image' | 'video') => {
     if (!postcard) return;
-    const link = document.createElement('a');
-    if (kind === 'image' && postcard.image_url) {
-      link.href = postcard.image_url;
-      link.download = `${postcard.title || 'postal'}-imagen.jpg`;
-    } else if (kind === 'video' && postcard.video_url) {
+
+    if (kind === 'video' && postcard.video_url) {
+      const link = document.createElement('a');
       link.href = postcard.video_url;
       link.download = `${postcard.title || 'postal'}-video.mp4`;
-    } else {
+      link.click();
       return;
     }
-    link.click();
+
+    if (kind !== 'image' || !postcard.image_url) return;
+
+    const baseName = postcard.title || 'postal';
+
+    if (!qrCodeUrl) {
+      const link = document.createElement('a');
+      link.href = postcard.image_url;
+      link.download = `${baseName}-imagen.jpg`;
+      link.click();
+      return;
+    }
+
+    const toastId = toast.loading('Preparando imagen con QR...');
+    try {
+      const blobUrl = await composeTargetWithQr(
+        postcard.image_url,
+        qrCodeUrl,
+        baseName,
+      );
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `${baseName}-imagen-qr.jpg`;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+      toast.success('Imagen lista', { id: toastId });
+    } catch (err) {
+      console.error('Error composing target with QR, falling back to raw image:', err);
+      const link = document.createElement('a');
+      link.href = postcard.image_url;
+      link.download = `${baseName}-imagen.jpg`;
+      link.click();
+      toast.error('No pudimos generar la imagen con QR, descargamos la original', {
+        id: toastId,
+      });
+    }
   };
 
   if (loading) {
@@ -328,9 +361,19 @@ export default function PostcardDetailPage() {
             {(() => {
               const needsActivation =
                 postcard.status === 'ready' && !postcard.is_activated;
+              const canDownload = isReady && !!postcard.is_activated;
 
               const imageTarget = (
-                <MediaCard label="Imagen Target" icon={<ImageIcon className="h-4 w-4" />}>
+                <MediaCard
+                  label="Imagen Target"
+                  icon={<ImageIcon className="h-4 w-4" />}
+                  downloadAction={
+                    canDownload && postcard.image_url
+                      ? () => handleDownload('image')
+                      : undefined
+                  }
+                  downloadLabel="Descargar imagen con QR"
+                >
                   <div
                     className={`relative ${needsActivation ? 'h-[280px] md:h-[320px]' : 'h-[380px] md:h-[440px]'} overflow-hidden`}
                   >
@@ -367,6 +410,12 @@ export default function PostcardDetailPage() {
                 <MediaCard
                   label="Video de realidad aumentada"
                   icon={<Video className="h-4 w-4" />}
+                  downloadAction={
+                    canDownload && postcard.video_url
+                      ? () => handleDownload('video')
+                      : undefined
+                  }
+                  downloadLabel="Descargar video"
                 >
                   <div
                     className={`relative ${needsActivation ? 'h-[280px] md:h-[320px]' : 'h-[380px] md:h-[440px]'} bg-black overflow-hidden`}
@@ -553,19 +602,39 @@ function MediaCard({
   label,
   icon,
   children,
+  downloadAction,
+  downloadLabel,
 }: {
   label: string;
   icon: React.ReactNode;
   children: React.ReactNode;
+  downloadAction?: () => void;
+  downloadLabel?: string;
 }) {
   return (
     <Card className="overflow-hidden border-border/60 bg-card/50 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow rounded-2xl p-0">
       <CardContent className="p-0 relative">
         {children}
-        <div className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-medium border border-white/10">
+        <div className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-medium border border-white/10 z-10">
           {icon}
           {label}
         </div>
+        {downloadAction && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={downloadAction}
+                aria-label={downloadLabel ?? 'Descargar'}
+                className="absolute top-3 right-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary text-primary-foreground text-xs font-semibold shadow-lg shadow-primary/30 hover:bg-primary/90 active:scale-95 transition-all z-10"
+              >
+                <Download className="h-3.5 w-3.5" />
+                <span>Descargar</span>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>{downloadLabel ?? 'Descargar'}</TooltipContent>
+          </Tooltip>
+        )}
       </CardContent>
     </Card>
   );
@@ -720,27 +789,38 @@ function ActionPanel({
         {(hasImage || hasVideo) && (
           <>
             <Separator />
-            <div className="space-y-2.5">
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                <Download className="h-3 w-3" />
-                Descargar
-              </h3>
-              <div className="grid grid-cols-2 gap-1.5">
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                  <Download className="h-3 w-3" />
+                  Descargar archivos
+                </h3>
+                <p className="text-xs text-muted-foreground/80 leading-relaxed">
+                  La imagen se descarga con el código QR incluido, lista para imprimir y activar la realidad aumentada.
+                </p>
+              </div>
+              <div className="space-y-1.5">
                 {hasImage && (
-                  <IconAction
+                  <Button
                     onClick={() => onDownload('image')}
-                    label="Descargar imagen"
-                    icon={<ImageIcon className="h-4 w-4" />}
-                    text="Imagen"
-                  />
+                    variant="outline"
+                    className="w-full justify-start gap-2 h-11 font-medium border-primary/30 bg-primary/5 hover:bg-primary/10 hover:border-primary/50 text-foreground"
+                  >
+                    <ImageIcon className="h-4 w-4 text-primary" />
+                    <span className="flex-1 text-left">Descargar imagen con QR</span>
+                    <Download className="h-4 w-4 opacity-60" />
+                  </Button>
                 )}
                 {hasVideo && (
-                  <IconAction
+                  <Button
                     onClick={() => onDownload('video')}
-                    label="Descargar video"
-                    icon={<Video className="h-4 w-4" />}
-                    text="Video"
-                  />
+                    variant="outline"
+                    className="w-full justify-start gap-2 h-11 font-medium border-primary/30 bg-primary/5 hover:bg-primary/10 hover:border-primary/50 text-foreground"
+                  >
+                    <Video className="h-4 w-4 text-primary" />
+                    <span className="flex-1 text-left">Descargar video</span>
+                    <Download className="h-4 w-4 opacity-60" />
+                  </Button>
                 )}
               </div>
             </div>
@@ -795,4 +875,88 @@ function TwitterIcon({ className }: { className?: string }) {
       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
     </svg>
   );
+}
+
+function loadImage(src: string, crossOrigin: boolean): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new window.Image();
+    if (crossOrigin) img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+    img.src = src;
+  });
+}
+
+async function composeTargetWithQr(
+  imageUrl: string,
+  qrDataUrl: string,
+  title: string,
+): Promise<string> {
+  const [targetImg, qrImg] = await Promise.all([
+    loadImage(imageUrl, true),
+    loadImage(qrDataUrl, false),
+  ]);
+
+  const W = targetImg.naturalWidth;
+  const targetH = targetImg.naturalHeight;
+  const padding = Math.round(W * 0.04);
+  const qrSize = Math.round(W * 0.32);
+  const captionGap = Math.round(W * 0.025);
+  const captionSize = Math.round(W * 0.028);
+  const subCaptionSize = Math.round(W * 0.022);
+  const stripH = qrSize + captionGap + captionSize + captionGap + subCaptionSize + padding;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = W + padding * 2;
+  canvas.height = padding + targetH + stripH + padding;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('No 2d context available');
+
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.drawImage(targetImg, padding, padding, W, targetH);
+
+  const sepY = padding + targetH + Math.round(padding * 0.6);
+  ctx.strokeStyle = '#E5E7EB';
+  ctx.lineWidth = Math.max(1, Math.round(W * 0.0015));
+  ctx.beginPath();
+  ctx.moveTo(padding, sepY);
+  ctx.lineTo(padding + W, sepY);
+  ctx.stroke();
+
+  const qrX = (canvas.width - qrSize) / 2;
+  const qrY = sepY + Math.round(padding * 0.6);
+  ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+
+  ctx.fillStyle = '#111827';
+  ctx.font = `600 ${captionSize}px system-ui, -apple-system, "Segoe UI", sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText(
+    'Escanea para ver en realidad aumentada',
+    canvas.width / 2,
+    qrY + qrSize + captionGap,
+  );
+
+  if (title) {
+    ctx.fillStyle = '#6B7280';
+    ctx.font = `400 ${subCaptionSize}px system-ui, -apple-system, "Segoe UI", sans-serif`;
+    ctx.fillText(
+      title,
+      canvas.width / 2,
+      qrY + qrSize + captionGap + captionSize + captionGap,
+    );
+  }
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) return reject(new Error('canvas.toBlob returned null'));
+        resolve(URL.createObjectURL(blob));
+      },
+      'image/jpeg',
+      0.92,
+    );
+  });
 }
