@@ -1,11 +1,7 @@
 import type { Metadata } from "next"
 import { Outfit } from "next/font/google"
-import {
-  ClerkProvider
-} from '@clerk/nextjs'
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
-import { clerkAppearance, clerkLocalization } from "@/lib/clerk-config"
 import "./globals.css"
 
 const outfit = Outfit({
@@ -86,36 +82,28 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider
-      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-      signInFallbackRedirectUrl="/dashboard"
-      signUpFallbackRedirectUrl="/dashboard"
-      appearance={clerkAppearance}
-      localization={clerkLocalization}
-    >
-      <html lang="es" suppressHydrationWarning>
-        <head>
-          <link rel="icon" href="/favicon.svg" />
-          <link rel="apple-touch-icon" href="/icon-192.png" />
-          <meta name="apple-mobile-web-app-capable" content="yes" />
-          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-          <meta name="apple-mobile-web-app-title" content="Regaliz" />
-          <meta name="mobile-web-app-capable" content="yes" />
-          <meta name="msapplication-TileColor" content="#F47B6B" />
-          <meta name="msapplication-tap-highlight" content="no" />
-        </head>
-        <body className={`${outfit.variable} font-sans antialiased`}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <Toaster />
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="es" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.svg" />
+        <link rel="apple-touch-icon" href="/icon-192.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Regaliz" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-TileColor" content="#F47B6B" />
+        <meta name="msapplication-tap-highlight" content="no" />
+      </head>
+      <body className={`${outfit.variable} font-sans antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster />
+        </ThemeProvider>
+      </body>
+    </html>
   )
 }

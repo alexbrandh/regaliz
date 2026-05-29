@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useUser } from '@clerk/nextjs';
+import { useUser } from '@/hooks/useUser';
 import { toast } from 'sonner';
 import type { Postcard } from '@/types/database';
 import { useNetworkStatus, isNetworkError } from './useNetworkStatus';

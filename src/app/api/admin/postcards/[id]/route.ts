@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
-import { clerkClient } from '@clerk/nextjs/server';
+import { getUserById } from '@/lib/auth/admin';
 import { checkAdminPassword } from '@/lib/admin-auth';
 
 async function getSignedUrl(bucket: string, path: string): Promise<string | null> {
@@ -73,20 +73,21 @@ export async function POST(
     const views = (viewRows || []) as Array<{ viewed_at: string }>;
 
     let user = {
-      email: 'Desconocido',
+      email: 'Migración pendiente',
       firstName: null as string | null,
       lastName: null as string | null,
       imageUrl: null as string | null,
     };
     try {
-      const client = await clerkClient();
-      const u = await client.users.getUser(data.user_id);
-      user = {
-        email: u.emailAddresses[0]?.emailAddress || 'Sin correo',
-        firstName: u.firstName,
-        lastName: u.lastName,
-        imageUrl: u.imageUrl ?? null,
-      };
+      const u = await getUserById(data.user_id);
+      if (u) {
+        user = {
+          email: u.email,
+          firstName: u.firstName,
+          lastName: u.lastName,
+          imageUrl: u.imageUrl,
+        };
+      }
     } catch (err) {
       console.error(`Failed to fetch user ${data.user_id}:`, err);
     }

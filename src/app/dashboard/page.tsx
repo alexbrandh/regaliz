@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { auth } from '@clerk/nextjs/server';
+import { auth } from '@/lib/auth/server';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { listPostcardsForUser } from '@/lib/postcards/list-for-user';
 import { DashboardClient } from './DashboardClient';

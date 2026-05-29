@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
-import { clerkClient } from '@clerk/nextjs/server';
+import { getUsersByIds } from '@/lib/auth/admin';
 import { checkAdminPassword } from '@/lib/admin-auth';
 
 interface RequestBody {
@@ -76,17 +76,17 @@ export async function POST(request: NextRequest) {
 
     if (userIds.length) {
       try {
-        const client = await clerkClient();
-        const { data: users } = await client.users.getUserList({ userId: userIds, limit: userIds.length });
-        for (const u of users) {
-          const s = userStats[u.id];
+        const usersMap = await getUsersByIds(userIds);
+        for (const uid of userIds) {
+          const s = userStats[uid];
           if (!s) continue;
+          const u = usersMap[uid];
           usersOut.push({
-            id: u.id,
-            email: u.emailAddresses[0]?.emailAddress || 'Sin correo',
-            firstName: u.firstName,
-            lastName: u.lastName,
-            imageUrl: u.imageUrl ?? null,
+            id: uid,
+            email: u?.email ?? 'Migración pendiente',
+            firstName: u?.firstName ?? null,
+            lastName: u?.lastName ?? null,
+            imageUrl: u?.imageUrl ?? null,
             postcardCount: s.postcardCount,
             totalViews: s.totalViews,
             lastActivity: s.lastActivity,

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { auth } from '@clerk/nextjs/server';
+import { auth } from '@/lib/auth/server';
 
 /**
  * POST /api/nft/upload-descriptors
