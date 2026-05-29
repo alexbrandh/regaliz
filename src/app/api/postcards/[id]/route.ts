@@ -13,6 +13,19 @@ import type { Database } from '@/types/database';
 
 type PostcardRow = Database['public']['Tables']['postcards']['Row'];
 
+// Pull the relative storage key out of whatever's in image_url / video_url.
+// New uploads write raw keys ("<owner>/<postcard>/image.jpg"); some legacy
+// rows hold a full signed URL ("https://<project>.supabase.co/storage/v1/
+// object/sign/<bucket>/<key>?token=..."). Both shapes collapse to the key
+// the storage client expects when generating a fresh signed URL.
+function extractStorageKey(url: string | null | undefined, bucket: string): string | null {
+  if (!url) return null;
+  const marker = `/${bucket}/`;
+  const idx = url.indexOf(marker);
+  const path = idx >= 0 ? url.slice(idx + marker.length) : url;
+  return path ? path.split('?')[0] : null;
+}
+
 interface PostcardResponse {
   id: string;
   status: string;
@@ -110,45 +123,19 @@ async function handleGetPostcard(
   // Generate signed URLs dynamically for image and video - IN PARALLEL
   logger.debug('Generating signed URLs for postcard assets', { postcardId });
   const startTime = Date.now();
-  
-  // Find actual image file in storage (extension may vary)
-  const folder = `${postcard.user_id}/${postcard.id}`;
-  let imagePath = '';
-  
-  try {
-    const { data: files, error: listError } = await supabase.storage
-      .from('postcard-images')
-      .list(folder);
-    
-    if (!listError && files && files.length > 0) {
-      // Find any image file (jpg, jpeg, png, webp)
-      const imageFile = files.find(f => 
-        /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name)
-      );
-      if (imageFile) {
-        imagePath = `${folder}/${imageFile.name}`;
-        logger.debug('Found image file in storage', { postcardId, metadata: { imagePath } });
-      }
-    }
-  } catch (err) {
-    logger.warn('Error listing storage files', { postcardId, metadata: { folder, error: String(err) } });
-  }
-  
-  // Fallback to common extensions if not found
-  if (!imagePath) {
-    imagePath = `${folder}/image.png`;
-  }
-  
-  let videoPath = postcard.video_url;
-  
-  // If video_url is a signed URL, extract the path
-  if (videoPath && videoPath.includes('supabase.co')) {
-    const match = videoPath.match(/postcard-videos\/([^?]+)/);
-    if (match) videoPath = match[1];
-  }
-  if (!videoPath) {
-    videoPath = `${postcard.user_id}/${postcard.id}/video.mp4`;
-  }
+
+  // postcards.image_url / video_url store the raw storage key (e.g.
+  // "<owner_id>/<postcard_id>/image.jpg") chosen at upload time. For legacy
+  // postcards uploaded before the Clerk -> Supabase auth migration that key
+  // still carries the Clerk-prefixed folder — which is also where the
+  // physical files live, so signing the key as-is works regardless of
+  // whether postcards.user_id was later remapped to the new auth UUID.
+  // Don't rebuild the path from postcard.user_id; that would point at an
+  // empty folder for every pre-migration postcard.
+  const imagePath = extractStorageKey(postcard.image_url, 'postcard-images')
+    || `${postcard.user_id}/${postcard.id}/image.png`;
+  const videoPath = extractStorageKey(postcard.video_url, 'postcard-videos')
+    || `${postcard.user_id}/${postcard.id}/video.mp4`;
   
   const urlContext = {
     operation: `GET /api/postcards/${postcardId}`,
