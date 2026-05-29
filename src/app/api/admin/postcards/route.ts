@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
-import { clerkClient } from '@clerk/nextjs/server';
+import { getUsersByIds } from '@/lib/auth/admin';
 import { checkAdminPassword } from '@/lib/admin-auth';
 
 async function getSignedUrl(bucket: string, path: string): Promise<string | null> {
@@ -169,22 +169,13 @@ export async function POST(request: NextRequest) {
       totalPages = pageSize === 0 ? 0 : Math.max(1, Math.ceil(totalAfterFilter / pageSize));
     }
 
-    // Hydrate users from Clerk (batch)
+    // Hydrate users from Supabase Auth (batch)
     const pageUserIds = [...new Set(postcards.map(p => p.user_id))];
-    const usersMap: Record<string, { email: string; firstName: string | null; lastName: string | null; imageUrl: string | null }> = {};
+    let usersMap: Record<string, { email: string; firstName: string | null; lastName: string | null; imageUrl: string | null }> = {};
 
     if (pageUserIds.length) {
       try {
-        const client = await clerkClient();
-        const { data: users } = await client.users.getUserList({ userId: pageUserIds, limit: pageUserIds.length });
-        for (const user of users) {
-          usersMap[user.id] = {
-            email: user.emailAddresses[0]?.emailAddress || 'Sin correo',
-            firstName: user.firstName,
-            lastName: user.lastName,
-            imageUrl: user.imageUrl ?? null,
-          };
-        }
+        usersMap = await getUsersByIds(pageUserIds);
       } catch (err) {
         console.error('Error fetching users batch:', err);
       }

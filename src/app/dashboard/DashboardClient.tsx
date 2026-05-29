@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo, useCallback } from 'react';
-import { useUser } from '@clerk/nextjs';
+import { useUser } from '@/hooks/useUser';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PostcardCard } from '@/components/PostcardCard';

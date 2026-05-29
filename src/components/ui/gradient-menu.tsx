@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { IoHomeOutline, IoAddCircleOutline, IoGridOutline, IoHelpCircleOutline, IoPersonOutline, IoSunnyOutline, IoMoonOutline } from 'react-icons/io5';
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
+import { SignedIn, SignedOut } from '@/components/auth/AuthGates';
+import { UserButton } from '@/components/auth/UserButton';
 
 const menuItems = [
   { title: 'Inicio', icon: <IoHomeOutline />, href: '/', gradientFrom: '#F47B6B', gradientTo: '#F5B5B5' },
@@ -80,7 +81,7 @@ export default function GradientMenu({ className }: GradientMenuProps) {
           
           {/* User/Login button */}
           <SignedOut>
-            <SignInButton mode="modal">
+            <Link href="/sign-in">
               <li
                 style={{ '--gradient-from': '#F47B6B', '--gradient-to': '#F5B5B5' } as React.CSSProperties}
                 className="relative w-[38px] h-[38px] sm:w-[44px] sm:h-[44px] bg-card/80 backdrop-blur-sm shadow-sm rounded-full flex items-center justify-center transition-all duration-500 hover:w-[90px] sm:hover:w-[102px] hover:shadow-none group cursor-pointer"
@@ -94,18 +95,12 @@ export default function GradientMenu({ className }: GradientMenuProps) {
                   Entrar
                 </span>
               </li>
-            </SignInButton>
+            </Link>
           </SignedOut>
-          
+
           <SignedIn>
             <li className="relative w-[38px] h-[38px] sm:w-[44px] sm:h-[44px] bg-card/80 backdrop-blur-sm shadow-sm rounded-full flex items-center justify-center">
-              <UserButton 
-                appearance={{
-                  elements: {
-                    avatarBox: "h-6 w-6 sm:h-7 sm:w-7"
-                  }
-                }}
-              />
+              <UserButton size="sm" />
             </li>
           </SignedIn>
 

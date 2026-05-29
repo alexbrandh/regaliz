@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Camera, ArrowDown } from 'lucide-react';
-import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
+import { SignedIn, SignedOut } from '@/components/auth/AuthGates';
 import { Button } from '@/components/ui/button';
 
 export function HeroCTAs() {
@@ -20,12 +20,12 @@ export function HeroCTAs() {
 
         <div className="flex flex-col sm:flex-row gap-3">
           <SignedOut>
-            <SignInButton mode="modal">
+            <Link href="/sign-in?redirect_url=%2Fdashboard%2Fnew">
               <Button size="lg" className="gap-2 text-lg px-8">
                 <Camera className="h-5 w-5" />
                 Comenzar Gratis
               </Button>
-            </SignInButton>
+            </Link>
           </SignedOut>
           <SignedIn>
             <Link href="/dashboard/new">

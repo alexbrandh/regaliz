@@ -1,7 +1,7 @@
 // src/app/api/checkout/create/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { auth } from '@/lib/auth/server';
 import { createServerClient } from '@/lib/supabase';
 import { buildCheckoutPermalink } from '@/lib/shopify/permalink';
 import { getVariantId, type ProductType, type VariantColor } from '@/lib/shopify/constants';
