@@ -86,10 +86,23 @@ export default function PostcardDetailPage() {
     }
   };
 
-  const videoPath =
-    postcard?.user_id && postcard?.id
-      ? `${postcard.user_id}/${postcard.id}/video.mp4`
-      : '';
+  // postcard.video_url comes back from /api/postcards/[id] as a fresh signed
+  // URL (https://<project>.supabase.co/storage/v1/object/sign/postcard-videos/
+  // <storage-key>?token=...). Peel the storage key out of it so useSignedUrl
+  // can re-sign on expiry. Rebuilding the key from postcard.user_id breaks
+  // for pre-migration postcards: the trigger remaps user_id to the new
+  // Supabase UUID, but the file is still under the original Clerk-prefixed
+  // folder.
+  const videoPath = (() => {
+    if (!postcard?.video_url) return '';
+    const marker = '/postcard-videos/';
+    const idx = postcard.video_url.indexOf(marker);
+    if (idx >= 0) {
+      return postcard.video_url.slice(idx + marker.length).split('?')[0];
+    }
+    // Older rows stored the raw key directly instead of a signed URL.
+    return postcard.video_url.split('?')[0];
+  })();
 
   const {
     signedUrl: videoSignedUrl,
