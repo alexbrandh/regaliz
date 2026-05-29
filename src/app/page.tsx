@@ -1,23 +1,23 @@
-'use client';
-
-import { LazyMotion, domAnimation } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ScrollPhoneHero } from '@/components/hero/ScrollPhoneHero';
 import { HeroCTAs } from '@/components/hero/HeroCTAs';
-import { HowItWorksSection } from '@/components/sections/HowItWorksSection';
 
-// LazyMotion + domAnimation ships the smaller animation feature set (~15KB
-// gzipped vs ~40KB for full motion). Children use `m.*` instead of `motion.*`.
+// HowItWorksSection lives below the fold and pulls framer-motion + Image
+// for the phone mockup. Splitting it into its own chunk keeps it off the
+// initial render path so the hero can hydrate first.
+const HowItWorksSection = dynamic(
+  () => import('@/components/sections/HowItWorksSection').then((m) => m.HowItWorksSection),
+);
+
 export default function Home() {
   return (
-    <LazyMotion features={domAnimation} strict>
-      <MainLayout>
-        <div className="min-h-screen">
-          <ScrollPhoneHero />
-          <HeroCTAs />
-          <HowItWorksSection />
-        </div>
-      </MainLayout>
-    </LazyMotion>
+    <MainLayout>
+      <div className="min-h-screen">
+        <ScrollPhoneHero />
+        <HeroCTAs />
+        <HowItWorksSection />
+      </div>
+    </MainLayout>
   );
 }

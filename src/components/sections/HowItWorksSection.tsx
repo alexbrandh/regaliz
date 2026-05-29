@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import Image from 'next/image';
-import { m, useScroll, useTransform, type MotionValue } from 'framer-motion';
+import { LazyMotion, domAnimation, m, useScroll, useTransform, type MotionValue } from 'framer-motion';
 import { Camera, Zap, Share2, type LucideIcon } from 'lucide-react';
 
 type Step = {
@@ -77,6 +77,7 @@ export function HowItWorksSection() {
   const opacities: MotionValue<number>[] = [op1, op2, op3];
 
   return (
+    <LazyMotion features={domAnimation} strict>
     <section
       ref={sectionRef}
       className="relative z-10 -mt-12 md:-mt-20 bg-card text-card-foreground rounded-t-[2.5rem] md:rounded-t-[4rem] shadow-2xl shadow-black/10"
@@ -165,6 +166,7 @@ export function HowItWorksSection() {
         </div>
       </div>
     </section>
+    </LazyMotion>
   );
 }
 

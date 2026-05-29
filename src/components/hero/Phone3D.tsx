@@ -15,8 +15,13 @@ export default function Phone3D({ scrollProgress, isMobile }: Props) {
     <Canvas
       aria-hidden="true"
       className="absolute inset-0"
-      dpr={[1, 2]}
-      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+      // Cap DPR at 1 on mobile — halves the shader/fragment workload with
+      // imperceptible quality loss at the small phone-screen scale. Desktop
+      // still gets up to 2 for retina sharpness.
+      dpr={isMobile ? 1 : [1, 2]}
+      // Antialias off on mobile too: GPU + battery savings, and the phone
+      // model bezels read fine without it at small sizes.
+      gl={{ antialias: !isMobile, alpha: true, powerPreference: 'high-performance' }}
       style={{ background: 'transparent' }}
       onCreated={({ gl }) => {
         gl.domElement.addEventListener(
