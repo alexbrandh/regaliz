@@ -36,17 +36,23 @@ export function useVideoTexture({ src, autoplay = true }: Options) {
   useEffect(() => {
     if (!video) return;
     videoRef.current = video;
+    // Re-assert the source in case a previous cleanup — or React StrictMode's
+    // mount→unmount→mount in dev — left the memoized <video> without one.
+    if (!video.getAttribute('src')) {
+      video.src = src;
+    }
     if (autoplay) {
       void video.play().catch(() => {
         // autoplay bloqueado — el caller puede reintentar con play()
       });
     }
+    // Only pause on cleanup. Stripping the src here (removeAttribute + load)
+    // broke the texture under StrictMode's double-invoke: the memoized video
+    // remounted with no source and never loaded, leaving a blank screen.
     return () => {
       video.pause();
-      video.removeAttribute('src');
-      video.load();
     };
-  }, [video, autoplay]);
+  }, [video, autoplay, src]);
 
   return {
     texture,

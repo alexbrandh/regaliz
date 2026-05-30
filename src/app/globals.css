@@ -226,7 +226,7 @@ a-scene {
   --card-foreground: oklch(0.20 0 0);
   --popover: oklch(0.99 0 0);
   --popover-foreground: oklch(0.40 0 0);
-  --primary: oklch(0.72 0.14 25);          /* Coral Regaliz */
+  --primary: oklch(0.54 0.16 25);          /* Coral Regaliz — darkened (light theme) for WCAG AA: white text on primary ≥4.5:1 AND text-primary on primary/10 tint ≥4.5:1. Dark theme keeps the lighter coral (it pairs with dark text). */
   --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.65 0.05 190);       /* Teal claro */
   --secondary-foreground: oklch(0.99 0 0);

@@ -31,7 +31,7 @@ const steps: Step[] = [
     // video: '/videos/how-it-works-step-1.mp4' (pendiente de producción)
     screenBg:
       'linear-gradient(180deg, oklch(0.95 0.04 25) 0%, oklch(0.82 0.10 25) 100%)',
-    iconColor: 'oklch(0.72 0.14 25)',
+    iconColor: 'oklch(0.64 0.15 25)',
   },
   {
     number: '02',
@@ -269,7 +269,7 @@ function PhoneMockup({ opacities }: { opacities: MotionValue<number>[] }) {
         sizes="(max-width: 768px) 200px, 320px"
         className="pointer-events-none absolute inset-0 h-full w-full select-none"
         draggable={false}
-        priority
+        loading="lazy"
       />
     </div>
   );

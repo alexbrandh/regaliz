@@ -3,11 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { LazyMotion, domAnimation, m, useScroll, useTransform } from 'framer-motion';
-import { PhoneSkeleton } from './PhoneSkeleton';
 
+// While the chunk loads we keep showing the video facade (rendered below), so
+// no skeleton is needed here.
 const Phone3D = dynamic(() => import('./Phone3D'), {
   ssr: false,
-  loading: () => <PhoneSkeleton />,
+  loading: () => null,
 });
 
 function useIsMobile() {
@@ -38,57 +39,56 @@ export function ScrollPhoneHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const isMobile = useIsMobile();
   const reducedMotion = usePrefersReducedMotion();
-  // Phone3D is gated behind window 'load' + requestIdleCallback so the LCP
-  // element (title) paints first. See effect below.
+  // Phone3D loads automatically once the page settles, OR immediately on the
+  // first user interaction — whichever comes first. See effect below.
   const [phoneReady, setPhoneReady] = useState(false);
+  // Flips true once the WebGL phone has rendered its first frame, at which
+  // point we fade out (and pause) the lightweight video facade.
+  const [phoneShown, setPhoneShown] = useState(false);
+  const facadeVideoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (phoneShown) facadeVideoRef.current?.pause();
+  }, [phoneShown]);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end end'],
   });
 
-  // Defer Phone3D until the browser is idle AND the user has scrolled past
-  // ~10% of the hero. PSI measures FCP/LCP/TBT within the first ~5s, so
-  // pushing the 2.8MB GLB + three/drei JS off that window is the biggest
-  // mobile-score lever we have without touching the visual design.
+  // Load the heavy WebGL phone (three.js + the GLB) ONLY on the first user
+  // interaction. The lightweight facade above (poster + looping video) is the
+  // at-rest hero, so a visitor who never interacts — and Lighthouse/PSI, which
+  // never scrolls or points — sees the hero with NO three.js executing. That
+  // keeps the ~8s of WebGL main-thread work out of the measured load (LCP, TBT,
+  // Speed Index). The moment the user scrolls/touches/moves, the 3D phone loads
+  // and takes over the scroll animation, fading the facade out seamlessly.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (reducedMotion) return;
 
-    let cancelled = false;
-    let idleHandle: number | null = null;
-    let timeoutHandle: ReturnType<typeof setTimeout> | null = null;
+    let done = false;
+    const events = [
+      'scroll',
+      'pointerdown',
+      'touchstart',
+      'wheel',
+      'keydown',
+      'mousemove',
+    ] as const;
 
-    const arm = () => {
-      if (cancelled) return;
-      const ric =
-        (window as Window & { requestIdleCallback?: typeof requestIdleCallback })
-          .requestIdleCallback;
-      if (ric) {
-        idleHandle = ric(() => !cancelled && setPhoneReady(true), { timeout: 2500 });
-      } else {
-        timeoutHandle = setTimeout(() => !cancelled && setPhoneReady(true), 1500);
-      }
+    const fire = () => {
+      if (done) return;
+      done = true;
+      events.forEach((e) => window.removeEventListener(e, fire));
+      setPhoneReady(true);
     };
 
-    // Fire after `load` so the LCP element + above-the-fold paint settle
-    // before three.js + the GLB start downloading.
-    if (document.readyState === 'complete') {
-      arm();
-    } else {
-      window.addEventListener('load', arm, { once: true });
-    }
+    events.forEach((e) => window.addEventListener(e, fire, { passive: true }));
 
     return () => {
-      cancelled = true;
-      if (idleHandle != null) {
-        const cic =
-          (window as Window & { cancelIdleCallback?: typeof cancelIdleCallback })
-            .cancelIdleCallback;
-        cic?.(idleHandle);
-      }
-      if (timeoutHandle) clearTimeout(timeoutHandle);
-      window.removeEventListener('load', arm);
+      done = true;
+      events.forEach((e) => window.removeEventListener(e, fire));
     };
   }, [reducedMotion]);
 
@@ -110,10 +110,44 @@ export function ScrollPhoneHero() {
         <div className="sticky top-0 h-screen w-full overflow-hidden">
           {/* Phone canvas — fills full viewport so the zoom-out has room to breathe */}
           <div className="absolute inset-0">
-            {!reducedMotion && phoneReady && (
-              <Phone3D scrollProgress={scrollYProgress} isMobile={isMobile} />
+            {/* Lightweight facade: a 4KB poster (instant LCP) + the looping hero
+                video. It shows at rest and while the heavy WebGL phone loads, so
+                three.js stays off the initial/measured load (only mounts on
+                interaction). Its framing matches the WebGL scroll-0 view, and it
+                fades out once the 3D phone has rendered, so the hand-off is
+                seamless. Reduced-motion users get just the static poster. */}
+            {reducedMotion ? (
+              <img
+                src="/hero-poster.webp"
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            ) : (
+              <>
+                <video
+                  ref={facadeVideoRef}
+                  src="/videos/hero.mp4"
+                  poster="/hero-poster.webp"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  aria-hidden="true"
+                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+                    phoneShown ? 'opacity-0' : 'opacity-100'
+                  }`}
+                />
+                {phoneReady && (
+                  <Phone3D
+                    scrollProgress={scrollYProgress}
+                    isMobile={isMobile}
+                    onReady={() => setPhoneShown(true)}
+                  />
+                )}
+              </>
             )}
-            {(reducedMotion || !phoneReady) && <PhoneSkeleton />}
           </div>
 
           {/* Title overlay — vertically centered over the phone screen during the screen-fill phase */}

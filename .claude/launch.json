@@ -3,9 +3,10 @@
   "configurations": [
     {
       "name": "Next.js dev",
-      "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["dev"],
-      "port": 3000
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3100,
+      "autoPort": true
     }
   ]
 }

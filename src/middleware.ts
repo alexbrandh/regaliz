@@ -70,10 +70,13 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
-  ],
+  // Only run the session/auth middleware where it is actually needed:
+  // protected pages (/dashboard) and API routes. Public marketing pages
+  // (/, /help, /privacy, /terms, /sign-in, /sign-up, /ar/*, /share/*) skip
+  // middleware entirely, so they serve straight from the static/CDN layer
+  // with NO Supabase getUser() round-trip on the request path. Auth state on
+  // those pages is resolved client-side via useUser(); the browser Supabase
+  // client auto-refreshes tokens, and protected routes still refresh the
+  // cookie here when the user actually navigates to them.
+  matcher: ['/dashboard', '/dashboard/:path*', '/api/:path*'],
 };

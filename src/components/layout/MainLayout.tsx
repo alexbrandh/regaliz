@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { OfflineIndicator } from '@/components/OfflineIndicator';
-import GradientMenu from '@/components/ui/gradient-menu';
+import { BottomNav } from './BottomNav';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -19,7 +19,7 @@ export function MainLayout({ children, showFooter = true, showBottomMenu = true 
       </main>
       {showFooter && <Footer />}
       <OfflineIndicator />
-      {showBottomMenu && <GradientMenu />}
+      {showBottomMenu && <BottomNav />}
     </div>
   );
 }
