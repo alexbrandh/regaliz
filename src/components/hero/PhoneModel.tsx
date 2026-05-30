@@ -10,7 +10,6 @@ import { useVideoTexture } from './useVideoTexture';
 type Props = {
   scrollProgress: MotionValue<number>;
   isMobile: boolean;
-  onReady?: () => void;
 };
 
 const MODEL_URL = '/models/phone.glb';
@@ -63,9 +62,8 @@ function computeModelSize(scene: THREE.Object3D): number {
   return Math.max(size.x, size.y, size.z);
 }
 
-export function PhoneModel({ scrollProgress, isMobile, onReady }: Props) {
+export function PhoneModel({ scrollProgress, isMobile }: Props) {
   const groupRef = useRef<THREE.Group>(null);
-  const readyRef = useRef(false);
   const { scene } = useGLTF(MODEL_URL);
   const { texture } = useVideoTexture({ src: VIDEO_URL });
 
@@ -108,14 +106,6 @@ export function PhoneModel({ scrollProgress, isMobile, onReady }: Props) {
   useFrame(({ clock }) => {
     const g = groupRef.current;
     if (!g) return;
-
-    // Signal the parent once the phone has actually rendered, so the video
-    // facade can fade out without leaving a gap.
-    if (!readyRef.current) {
-      readyRef.current = true;
-      onReady?.();
-    }
-
     const p = scrollProgress.get();
 
     // Zoom-out: 0 → 0.65 — phone shrinks from startScale to finalScale

@@ -8,10 +8,9 @@ import { PhoneModel } from './PhoneModel';
 type Props = {
   scrollProgress: MotionValue<number>;
   isMobile: boolean;
-  onReady?: () => void;
 };
 
-export default function Phone3D({ scrollProgress, isMobile, onReady }: Props) {
+export default function Phone3D({ scrollProgress, isMobile }: Props) {
   return (
     <Canvas
       aria-hidden="true"
@@ -43,7 +42,7 @@ export default function Phone3D({ scrollProgress, isMobile, onReady }: Props) {
           mobile scale and the bulk of the visual is the video on the screen.
           Bump ambient + directional intensity to compensate for the missing IBL. */}
       {!isMobile && <Environment preset="city" />}
-      <PhoneModel scrollProgress={scrollProgress} isMobile={isMobile} onReady={onReady} />
+      <PhoneModel scrollProgress={scrollProgress} isMobile={isMobile} />
     </Canvas>
   );
 }
