@@ -6,6 +6,22 @@ import { generateRealNFTDescriptors } from '@/lib/real-nft-generator';
 /**
  * POST /api/nft/regenerate
  * Regenerate NFT descriptors for an existing postcard using the real generator
+ *
+ * KNOWN BROKEN ON VERCEL. generateRealNFTDescriptors spawns a child node
+ * process (child_process.spawn / spawnSync) and writes to the filesystem, so
+ * it cannot run in the serverless runtime this route deploys to. Meanwhile
+ * POST /api/nft/generate goes through nft-generator.ts ->
+ * native-nft-generator.ts, which is serverless-safe.
+ *
+ * So the two endpoints do NOT produce descriptors the same way, and this one
+ * most likely fails in production, leaving the postcard stuck in
+ * 'processing'.
+ *
+ * Deliberately not unified yet: the two generators are not interchangeable.
+ * native-nft-generator produces synthetic descriptors; this one shells out to
+ * a real marker compiler. Pointing regenerate at the native path would change
+ * AR tracking quality, which is a product call, not a refactor. Decide that
+ * before porting, and make both endpoints share one engine.
  */
 export async function POST(request: NextRequest) {
   try {
