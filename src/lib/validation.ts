@@ -434,67 +434,6 @@ export async function validatePostcardData(
 }
 
 /**
- * Validate NFT descriptors
- */
-export function validateNFTDescriptors(descriptors: unknown): ValidationResult {
-  const errors: ValidationError[] = [];
-
-  if (!descriptors || typeof descriptors !== 'object') {
-    errors.push({
-      field: 'descriptors',
-      message: 'NFT descriptors must be an object',
-      code: 'INVALID_DESCRIPTORS_TYPE'
-    });
-    return { isValid: false, errors };
-  }
-
-  // Check required fields
-  const requiredFields = ['descriptorUrl', 'generated', 'timestamp', 'files'];
-  for (const field of requiredFields) {
-    if (!(field in descriptors)) {
-      errors.push({
-        field,
-        message: `Missing required field: ${field}`,
-        code: 'MISSING_REQUIRED_FIELD'
-      });
-    }
-  }
-
-  // Validate files object
-  const descriptorsObj = descriptors as Record<string, unknown>;
-  if (descriptorsObj.files && typeof descriptorsObj.files === 'object') {
-    const filesObj = descriptorsObj.files as Record<string, unknown>;
-    const requiredFiles = ['iset', 'fset', 'fset3'];
-    for (const file of requiredFiles) {
-      if (!(file in filesObj)) {
-        errors.push({
-          field: `files.${file}`,
-          message: `Missing required NFT file: ${file}`,
-          code: 'MISSING_NFT_FILE'
-        });
-      } else if (typeof filesObj[file] !== 'string') {
-        errors.push({
-          field: `files.${file}`,
-          message: `NFT file URL must be a string: ${file}`,
-          code: 'INVALID_NFT_FILE_URL'
-        });
-      }
-    }
-  } else {
-    errors.push({
-      field: 'files',
-      message: 'NFT files object is required',
-      code: 'MISSING_FILES_OBJECT'
-    });
-  }
-
-  return {
-    isValid: errors.length === 0,
-    errors
-  };
-}
-
-/**
  * Validate postcard exists and belongs to user
  */
 export async function validatePostcardAccess(
