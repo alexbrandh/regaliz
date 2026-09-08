@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 
 type Options = {
@@ -7,8 +7,6 @@ type Options = {
 };
 
 export function useVideoTexture({ src, autoplay = true }: Options) {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-
   const video = useMemo(() => {
     if (typeof document === 'undefined') return null;
     const v = document.createElement('video');
@@ -33,9 +31,16 @@ export function useVideoTexture({ src, autoplay = true }: Options) {
     return t;
   }, [video]);
 
+  /* eslint-disable react-hooks/immutability --
+   * This effect mutates `video`, which comes from useMemo, so the rule is
+   * right on principle: a <video> is mutable by nature and belongs in a ref,
+   * not a memo. Deliberately not refactored here. This hook is what finally
+   * got the 3D hero rendering on iOS Safari (see the cleanup note below), the
+   * failure mode is a silently blank hero, and it cannot be re-verified
+   * without a real device. Move the element to a ref when the hero is ported,
+   * with a phone on hand to test it. */
   useEffect(() => {
     if (!video) return;
-    videoRef.current = video;
     // Re-assert the source in case a previous cleanup — or React StrictMode's
     // mount→unmount→mount in dev — left the memoized <video> without one.
     if (!video.getAttribute('src')) {
@@ -53,6 +58,7 @@ export function useVideoTexture({ src, autoplay = true }: Options) {
       video.pause();
     };
   }, [video, autoplay, src]);
+  /* eslint-enable react-hooks/immutability */
 
   return {
     texture,
