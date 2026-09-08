@@ -36,7 +36,7 @@ const nextConfig = {
       },
       // All API routes are dynamic and per-request. The blanket no-cache
       // prevents Vercel's edge from caching 404 responses that come from
-      // Clerk middleware rewrites — those were sticking and serving stale
+      // middleware rewrites — those were sticking and serving stale
       // 404s on /api/postcards/[id] even after deploy invalidation. Routes
       // that want caching opt in via Cache-Control inside the route handler.
       {

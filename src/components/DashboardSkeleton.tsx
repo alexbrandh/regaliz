@@ -1,5 +1,5 @@
 // Skeleton that mirrors the dashboard layout so the user sees real page
-// structure instead of a centered spinner while Clerk + the fetch settle.
+// structure instead of a centered spinner while auth + the fetch settle.
 
 const SkeletonBlock = ({ className = '' }: { className?: string }) => (
   <div className={`animate-pulse rounded-md bg-muted/70 ${className}`} aria-hidden="true" />

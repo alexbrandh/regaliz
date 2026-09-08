@@ -93,9 +93,9 @@ export function usePostcards(options: UsePostcardsOptions = {}) {
       metadata: { forceCacheBust, isOnline }
     });
 
-    // Wait for Clerk to load
+    // Wait for the auth session to load
     if (!isLoaded) {
-      logger.info('⏳ [FETCH] Clerk not loaded yet, waiting...');
+      logger.info('⏳ [FETCH] auth not loaded yet, waiting...');
       return;
     }
 
@@ -211,7 +211,7 @@ export function usePostcards(options: UsePostcardsOptions = {}) {
     return fetchPostcardsImmediate(forceCacheBust);
   }, [fetchPostcardsImmediate]);
 
-  // Initial fetch when Clerk finishes loading — skipped when initialData was
+  // Initial fetch when auth finishes loading — skipped when initialData was
   // already provided by a Server Component pre-fetch.
   useEffect(() => {
     if (!isLoaded) return;

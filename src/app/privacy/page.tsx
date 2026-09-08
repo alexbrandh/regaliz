@@ -26,7 +26,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-semibold mt-8 mb-3">2. Qué datos recopilamos</h2>
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Cuenta:</strong> nombre, correo electrónico y avatar (gestionados por Clerk).</li>
+              <li><strong>Cuenta:</strong> nombre, correo electrónico y avatar (gestionados por Supabase Auth).</li>
               <li><strong>Contenido subido:</strong> las imágenes y videos que tú decides cargar para crear tus postales.</li>
               <li><strong>Datos técnicos:</strong> dirección IP, tipo de dispositivo y navegador, registros de error.</li>
               <li><strong>Uso:</strong> número de visualizaciones de realidad aumentada de tus postales (de forma agregada).</li>
@@ -49,8 +49,7 @@ export default function PrivacyPage() {
             <p>Para prestar el servicio nos apoyamos en:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li><strong>Vercel</strong> (hosting y CDN).</li>
-              <li><strong>Supabase</strong> (base de datos y almacenamiento de archivos).</li>
-              <li><strong>Clerk</strong> (autenticación de usuarios).</li>
+              <li><strong>Supabase</strong> (autenticación, base de datos y almacenamiento de archivos).</li>
             </ul>
             <p>Estos proveedores tratan los datos siguiendo sus propias políticas y contratos de encargo.</p>
           </section>
@@ -71,7 +70,7 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-2xl font-semibold mt-8 mb-3">7. Cookies</h2>
-            <p>Usamos cookies estrictamente necesarias para el funcionamiento de la sesión (Clerk)
+            <p>Usamos cookies estrictamente necesarias para el funcionamiento de la sesión (Supabase Auth)
               y para recordar tus preferencias (tema claro/oscuro). No usamos cookies de marketing
               ni de seguimiento de terceros.</p>
           </section>
