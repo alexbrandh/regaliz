@@ -1,6 +1,6 @@
 import 'server-only';
 import { createClient } from '@/lib/supabase/server';
-import { redirect } from 'next/navigation';
+import { redirect } from '@/lib/navigation/server';
 
 // Mirrors the shape of Clerk's `auth()` so the rest of the codebase can
 // continue passing `userId: string | null` around. Backed by Supabase.

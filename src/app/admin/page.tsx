@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@/lib/navigation/client';
 import { ImageIcon, Eye, Users, Activity, ArrowRight, AlertCircle } from 'lucide-react';
 import { api, type AnalyticsResponse, type PostcardListResponse } from '@/lib/admin/api';
 import { KpiCard } from '@/components/admin/dashboard/KpiCard';

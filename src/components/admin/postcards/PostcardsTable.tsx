@@ -1,7 +1,7 @@
 'use client';
 
 import { Eye, Mail, Calendar } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/lib/navigation/client';
 import type { AdminPostcard } from '@/lib/admin/api';
 import { StatusBadge } from './StatusBadge';
 import { PostcardActions } from './PostcardActions';

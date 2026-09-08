@@ -1,7 +1,7 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
+import { Image } from '@/lib/navigation/image';
+import { Link } from '@/lib/navigation/client';
 import { LogOut, User as UserIcon } from 'lucide-react';
 import {
   DropdownMenu,

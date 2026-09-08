@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useUser } from '@/hooks/useUser';
-import Link from 'next/link';
+import { Link } from '@/lib/navigation/client';
 import { Button } from '@/components/ui/button';
 import { PostcardCard } from '@/components/PostcardCard';
 import { DashboardStats } from '@/components/DashboardStats';

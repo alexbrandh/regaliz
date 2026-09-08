@@ -1,7 +1,7 @@
 'use client';
 
 import React, { memo } from 'react';
-import Image from 'next/image';
+import { Image } from '@/lib/navigation/image';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

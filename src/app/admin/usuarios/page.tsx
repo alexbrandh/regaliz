@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@/lib/navigation/client';
 import { Mail, Eye, ImageIcon, Search, Users as UsersIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { api, type UserSummary } from '@/lib/admin/api';

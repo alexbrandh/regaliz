@@ -1,9 +1,8 @@
 'use client';
 
+import { useParams, Link } from '@/lib/navigation/client';
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
 import { useUser } from '@/hooks/useUser';
-import Link from 'next/link';
 
 interface PostcardSummary {
   id: string;

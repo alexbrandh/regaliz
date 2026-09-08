@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/lib/navigation/client';
 import { Eye, Calendar } from 'lucide-react';
 import type { AdminPostcard } from '@/lib/admin/api';
 import { StatusBadge } from './StatusBadge';

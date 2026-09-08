@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/lib/navigation/client';
 import { Camera, ArrowDown } from 'lucide-react';
 import { SignedIn, SignedOut } from '@/components/auth/AuthGates';
 import { Button } from '@/components/ui/button';

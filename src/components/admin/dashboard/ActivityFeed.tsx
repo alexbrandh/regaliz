@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/lib/navigation/client';
 import type { AdminPostcard } from '@/lib/admin/api';
 import { StatusBadge } from '@/components/admin/postcards/StatusBadge';
 import { relativeTime, initials } from '@/lib/admin/format';

@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+import { redirect } from '@/lib/navigation/server';
 import { auth } from '@/lib/auth/server';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { listPostcardsForUser } from '@/lib/postcards/list-for-user';

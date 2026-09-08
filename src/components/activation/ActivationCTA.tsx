@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+import { Image } from '@/lib/navigation/image';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {

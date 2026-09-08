@@ -14,7 +14,7 @@
 'use client';
 
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams } from '@/lib/navigation/client';
 
 interface PostcardData {
   id: string;

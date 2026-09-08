@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/lib/navigation/client';
 import { Eye } from 'lucide-react';
 import type { AnalyticsResponse } from '@/lib/admin/api';
 import { formatNumber, initials } from '@/lib/admin/format';

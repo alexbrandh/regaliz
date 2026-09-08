@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
-import Image from 'next/image';
+import { Link } from '@/lib/navigation/client';
+import { Image } from '@/lib/navigation/image';
 import { GlassEffect, GlassFilter } from '@/components/ui/liquid-glass';
 
 export function Header() {
