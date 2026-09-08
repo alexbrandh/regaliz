@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Share2, Copy, QrCode, ExternalLink, Check } from 'lucide-react';
-import Image from 'next/image';
+import { Image } from '@/lib/navigation/image';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,

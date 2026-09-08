@@ -1,9 +1,8 @@
 'use client';
 
+import { useRouter, Link } from '@/lib/navigation/client';
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
+import { Image } from '@/lib/navigation/image';
 import { useUser } from '@/hooks/useUser';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';

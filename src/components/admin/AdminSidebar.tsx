@@ -1,7 +1,6 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link, usePathname } from '@/lib/navigation/client';
 import { LayoutDashboard, ImageIcon, Users, Settings, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

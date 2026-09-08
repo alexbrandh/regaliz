@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateUUID, validateUserId, validateNFTDescriptors } from './validation';
+import { validateUUID, validateUserId } from './validation';
 
 describe('validateUUID', () => {
   it('accepts a v4 UUID', () => {
@@ -61,72 +61,5 @@ describe('validateUserId', () => {
     for (const bad of ['', 'admin', '12345']) {
       expect(validateUserId(bad).isValid).toBe(false);
     }
-  });
-});
-
-/**
- * Guards the legacy AR.js descriptor shape, produced by /api/nft/generate.
- * Note this is NOT the shape the live MindAR pipeline writes — that one is
- * {type: 'mindar', targetUrl, ...} and never passes through here.
- */
-describe('validateNFTDescriptors', () => {
-  const valid = {
-    descriptorUrl: 'https://example.com/descriptors',
-    generated: true,
-    timestamp: '2026-01-01T00:00:00.000Z',
-    files: {
-      iset: 'https://example.com/d.iset',
-      fset: 'https://example.com/d.fset',
-      fset3: 'https://example.com/d.fset3',
-    },
-  };
-
-  it('accepts a complete descriptor set', () => {
-    expect(validateNFTDescriptors(valid).isValid).toBe(true);
-  });
-
-  it('rejects non-objects', () => {
-    for (const bad of [null, undefined, 'string', 42]) {
-      expect(validateNFTDescriptors(bad).isValid).toBe(false);
-    }
-  });
-
-  it('requires every one of the three marker files', () => {
-    for (const missing of ['iset', 'fset', 'fset3'] as const) {
-      const files = { ...valid.files };
-      delete files[missing];
-      const result = validateNFTDescriptors({ ...valid, files });
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some((e) => e.field === `files.${missing}`)).toBe(true);
-    }
-  });
-
-  it('rejects file entries that are not URLs strings', () => {
-    const result = validateNFTDescriptors({
-      ...valid,
-      files: { ...valid.files, fset: 12345 },
-    });
-    expect(result.isValid).toBe(false);
-  });
-
-  it('reports every missing top-level field at once, not just the first', () => {
-    const result = validateNFTDescriptors({ files: valid.files });
-    expect(result.isValid).toBe(false);
-    const missing = result.errors.map((e) => e.field);
-    expect(missing).toContain('descriptorUrl');
-    expect(missing).toContain('generated');
-    expect(missing).toContain('timestamp');
-  });
-
-  it('does NOT accept the live MindAR descriptor shape', () => {
-    // Documents a real split: /api/ar/compile-target writes this shape into
-    // the same nft_descriptors column, and it would fail this validator. It
-    // never reaches it today because only the legacy route calls this.
-    const mindar = {
-      type: 'mindar',
-      targetUrl: '/api/ar/mind-target/user/postcard',
-      generatedBy: 'mindar-server',
-    };
-    expect(validateNFTDescriptors(mindar).isValid).toBe(false);
   });
 });

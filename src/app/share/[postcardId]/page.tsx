@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound } from '@/lib/navigation/server';
 import { createClient } from '@/lib/supabase/server';
 import { SharePostcardView } from '@/components/SharePostcardView';
 import { Postcard } from '@/types/database';

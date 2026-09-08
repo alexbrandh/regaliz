@@ -1,8 +1,8 @@
 'use client';
 
+import { useParams, useSearchParams, useRouter, Link } from '@/lib/navigation/client';
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { Image } from '@/lib/navigation/image';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
@@ -22,7 +22,6 @@ import {
   ChevronRight,
   Maximize2,
 } from 'lucide-react';
-import Link from 'next/link';
 import { toast } from 'sonner';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Card, CardContent } from '@/components/ui/card';

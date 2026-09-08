@@ -1,5 +1,5 @@
-import Image from 'next/image';
-import Link from 'next/link';
+import { Image } from '@/lib/navigation/image';
+import { Link } from '@/lib/navigation/client';
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
 
 type SearchParams = Promise<{ redirect_url?: string; error?: string }>;

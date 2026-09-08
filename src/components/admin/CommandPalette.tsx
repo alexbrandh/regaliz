@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/lib/navigation/client';
 import { Search, LayoutDashboard, ImageIcon, Users, Settings, RefreshCw, LogOut, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { api, type AdminPostcard } from '@/lib/admin/api';

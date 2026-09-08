@@ -1,8 +1,7 @@
 'use client';
 
+import { Link, useRouter } from '@/lib/navigation/client';
 import { useEffect, useState, use } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import QRCode from 'qrcode';
 import {
   ArrowLeft, Copy, Check, ExternalLink, Mail, Calendar, Eye,

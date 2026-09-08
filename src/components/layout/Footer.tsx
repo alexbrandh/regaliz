@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/lib/navigation/client';
 import { Mail } from 'lucide-react';
-import Image from 'next/image';
+import { Image } from '@/lib/navigation/image';
 
 export function Footer() {
   return (

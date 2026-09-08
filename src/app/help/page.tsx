@@ -10,7 +10,7 @@ import {
   HelpCircle,
   ChevronRight
 } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/lib/navigation/client';
 
 export default function HelpPage() {
   const steps = [

@@ -1,8 +1,7 @@
 'use client';
 
+import { Link, usePathname } from '@/lib/navigation/client';
 import React, { useSyncExternalStore } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { IoHomeOutline, IoAddCircleOutline, IoGridOutline, IoHelpCircleOutline, IoPersonOutline, IoSunnyOutline, IoMoonOutline } from 'react-icons/io5';
 import { SignedIn, SignedOut } from '@/components/auth/AuthGates';

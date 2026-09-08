@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import Image from 'next/image';
+import { Image } from '@/lib/navigation/image';
 import { LazyMotion, domAnimation, m, useScroll, useTransform, type MotionValue } from 'framer-motion';
 import { Camera, Zap, Share2, type LucideIcon } from 'lucide-react';
 

@@ -1,7 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
-import { redirect } from 'next/navigation';
+import { redirect } from '@/lib/navigation/server';
 import { headers } from 'next/headers';
 
 // Server Action invoked by the sign-in / sign-up button. Builds the
