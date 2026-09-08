@@ -1,12 +1,16 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { IoHomeOutline, IoAddCircleOutline, IoGridOutline, IoHelpCircleOutline, IoPersonOutline, IoSunnyOutline, IoMoonOutline } from 'react-icons/io5';
 import { SignedIn, SignedOut } from '@/components/auth/AuthGates';
 import { UserButton } from '@/components/auth/UserButton';
+
+// Never notifies: the only thing that changes between server and client is
+// which snapshot getter React calls.
+const subscribeToNothing = () => () => {};
 
 const menuItems = [
   { title: 'Inicio', icon: <IoHomeOutline />, href: '/', gradientFrom: '#F47B6B', gradientTo: '#F5B5B5' },
@@ -59,11 +63,10 @@ const surfaceClass = 'absolute inset-0 flex items-center justify-center rounded-
 export default function GradientMenu({ className }: GradientMenuProps) {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // next-themes only knows the real theme on the client, so the first paint
+  // must not depend on it. useSyncExternalStore gives us false on the server
+  // and true on the client without mirroring that through an effect.
+  const mounted = useSyncExternalStore(subscribeToNothing, () => true, () => false);
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');

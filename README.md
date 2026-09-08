@@ -50,10 +50,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
   - `SUPABASE_SERVICE_ROLE_KEY`
 
-- __Clerk__
-  - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
-  - `CLERK_SECRET_KEY`
-
 - __App__
   - `NEXT_PUBLIC_APP_URL` (ej. http://localhost:3001)
 

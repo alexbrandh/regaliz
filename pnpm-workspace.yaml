@@ -1,4 +1,3 @@
 onlyBuiltDependencies:
-  - '@clerk/shared'
   - sharp
   - unrs-resolver

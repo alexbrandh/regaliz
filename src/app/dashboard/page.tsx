@@ -4,7 +4,7 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { listPostcardsForUser } from '@/lib/postcards/list-for-user';
 import { DashboardClient } from './DashboardClient';
 
-// Server Component: resolve the Clerk user, list their postcards in parallel
+// Server Component: resolve the signed-in user, list their postcards in parallel
 // with the layout chrome, and hand the array off to the client island. The
 // client hook hydrates from initialPostcards and skips its mount-time fetch,
 // so the first paint already has data instead of a skeleton + spinner.

@@ -42,6 +42,7 @@ supabase/.temp/
 # logs
 logs
 *.log
+build_log.txt
 .vercel
 
 # Playwright MCP artifacts

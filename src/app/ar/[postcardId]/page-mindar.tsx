@@ -1,3 +1,16 @@
+/**
+ * NOT A ROUTE, AND NOT WIRED UP. Kept on purpose.
+ *
+ * Its three siblings (page-clean, page-simple, page-complex) were deleted as
+ * dead AR.js prototypes. This one survived because it is the repo's only
+ * example of driving MindAR imperatively through three.js
+ * (mindar-image-three) rather than through A-Frame's declarative binding,
+ * which is what public/ar-viewer.html uses.
+ *
+ * That imperative shape is exactly what the viewer will need when this app
+ * moves off Next and the viewer has to own its own render loop. Use it as a
+ * reference, then delete it once the ported viewer works.
+ */
 'use client';
 
 import { useEffect, useState, useRef, useCallback } from 'react';
