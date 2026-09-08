@@ -82,7 +82,7 @@ export function withAuth<T>(
   return async (req: NextRequest): Promise<NextResponse<ApiResponse<T>>> => {
     try {
       const { userId } = await auth();
-      
+
       if (!userId) {
         return createApiResponse(
           false,
@@ -130,10 +130,10 @@ function isNetworkError(error: Error): boolean {
     'timeout',
     'aborted'
   ];
-  
+
   const errorMessage = error.message.toLowerCase();
   const errorName = error.name.toLowerCase();
-  
+
   return networkErrorPatterns.some(pattern => 
     errorMessage.includes(pattern.toLowerCase()) || 
     errorName.includes(pattern.toLowerCase())
@@ -150,7 +150,7 @@ function isTimeoutError(error: Error): boolean {
     'ERR_CONNECTION_TIMED_OUT',
     'Request timed out'
   ];
-  
+
   const errorMessage = error.message.toLowerCase();
   return timeoutPatterns.some(pattern => 
     errorMessage.includes(pattern.toLowerCase())
@@ -175,29 +175,29 @@ export function withErrorHandling<T>(
   return async (req: NextRequest, ...args: unknown[]): Promise<NextResponse<ApiResponse<T>>> => {
     const startTime = Date.now();
     const requestId = startRequestMonitoring(req.url, req.method);
-    
+
     try {
       logger.info(`[${requestId}] API Request started: ${req.method} ${req.url}`);
-      
+
       const result = await handler(req, ...args);
-      
+
       const duration = Date.now() - startTime;
       logger.info(`[${requestId}] API Request completed in ${duration}ms`);
-      
+
       endRequestMonitoring(requestId, 'success');
-      
+
       return result;
     } catch (error) {
       const duration = Date.now() - startTime;
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
+
       // Log network error with debugging utilities
       const errorId = logNetworkError(error, {
         url: req.url,
         method: req.method,
         duration
       });
-      
+
       logger.error(`[${requestId}] API Error after ${duration}ms:`, {
         operation: 'api_request',
         metadata: {
@@ -210,9 +210,9 @@ export function withErrorHandling<T>(
           errorId
         }
       });
-      
+
       endRequestMonitoring(requestId, 'error', undefined, error instanceof Error ? error.name : 'unknown');
-      
+
       // Handle specific error types
       if (error instanceof Error) {
         // Abort errors (user cancelled request)
@@ -227,7 +227,7 @@ export function withErrorHandling<T>(
             }
           ) as unknown as NextResponse<ApiResponse<T>>;
         }
-        
+
         // Timeout errors
         if (isTimeoutError(error)) {
           logger.warn(`[${requestId}] Request timed out after ${duration}ms`);
@@ -240,7 +240,7 @@ export function withErrorHandling<T>(
             }
           ) as unknown as NextResponse<ApiResponse<T>>;
         }
-        
+
         // Network errors
         if (isNetworkError(error)) {
           logger.warn(`[${requestId}] Network error detected: ${errorMessage}`);
@@ -253,7 +253,7 @@ export function withErrorHandling<T>(
             }
           ) as unknown as NextResponse<ApiResponse<T>>;
         }
-        
+
         // Database errors
         if (error.message.includes('invalid input syntax for type uuid')) {
           return createApiResponse(
@@ -265,7 +265,7 @@ export function withErrorHandling<T>(
             }
           ) as unknown as NextResponse<ApiResponse<T>>;
         }
-        
+
         // Supabase specific errors
         if (error.message.includes('JWT') || error.message.includes('auth')) {
           logger.warn(`[${requestId}] Authentication error: ${errorMessage}`);
@@ -278,7 +278,7 @@ export function withErrorHandling<T>(
             }
           ) as unknown as NextResponse<ApiResponse<T>>;
         }
-        
+
         // Rate limit errors
         if (error.message.includes('rate limit') || error.message.includes('too many requests')) {
           logger.warn(`[${requestId}] Rate limit exceeded`);
@@ -292,7 +292,7 @@ export function withErrorHandling<T>(
           ) as unknown as NextResponse<ApiResponse<T>>;
         }
       }
-      
+
       // Generic error response - show actual error message for debugging
       logger.error(`[${requestId}] Unhandled error: ${errorMessage}`);
       console.error(`[${requestId}] FULL ERROR:`, error);
@@ -332,7 +332,7 @@ export function withMethodValidation(
           }
         ) as unknown as NextResponse<ApiResponse<T>>;
       }
-      
+
       return await handler(req, ...args);
     };
   };
@@ -351,13 +351,13 @@ export function withBodyValidation<T>(
       try {
         const body = await req.json();
         const validation = validator(body);
-        
+
         if (!validation.isValid) {
           return createValidationErrorResponse(validation) as unknown as NextResponse<ApiResponse<U>>;
         }
-        
+
         return await handler(req, body, ...args);
-      } catch (_error) { // eslint-disable-line @typescript-eslint/no-unused-vars
+      } catch (_error) {  
         return createApiResponse(
           false,
           undefined,
@@ -382,11 +382,11 @@ export function withParamValidation(
   ) {
     return async (req: NextRequest, context: { params: Record<string, string> }, ...args: unknown[]): Promise<NextResponse<ApiResponse<T>>> => {
       const validation = validator(context.params);
-      
+
       if (!validation.isValid) {
         return createValidationErrorResponse(validation) as unknown as NextResponse<ApiResponse<T>>;
       }
-      
+
       return await handler(req, context.params, ...args);
     };
   };
@@ -407,7 +407,7 @@ export function withTimeout(
       const timeoutId = setTimeout(() => {
         controller.abort();
       }, timeoutMs);
-      
+
       try {
         // Add abort signal to request if it doesn't have one
         // Node.js fetch requires the duplex: 'half' option when sending a request with a streamed body
@@ -421,14 +421,14 @@ export function withTimeout(
         }
         const baseRequest = new Request(req as unknown as Request, baseInit);
         const requestWithTimeout = new NextRequest(baseRequest);
-        
+
         const result = await handler(requestWithTimeout, ...args);
         clearTimeout(timeoutId);
         endRequestMonitoring(requestId, 'success');
         return result;
       } catch (error) {
         clearTimeout(timeoutId);
-        
+
         if (error instanceof Error && (error.name === 'AbortError' || controller.signal.aborted)) {
           logger.warn(`Request timed out after ${timeoutMs}ms`);
           logNetworkError(error, {
@@ -445,7 +445,7 @@ export function withTimeout(
             }
           ) as unknown as NextResponse<ApiResponse<T>>;
         }
-        
+
         logNetworkError(error as Error, {
           url: req.url,
           method: req.method
@@ -473,12 +473,12 @@ export function withRateLimit(
       const clientIp = req.headers.get('x-forwarded-for') || 
                       req.headers.get('x-real-ip') || 
                       'unknown';
-      
+
       const now = Date.now();
       const key = `${clientIp}:${req.url}`;
-      
+
       const current = rateLimitMap.get(key);
-      
+
       if (current && now < current.resetTime) {
         if (current.count >= maxRequests) {
           return createApiResponse(
@@ -497,7 +497,7 @@ export function withRateLimit(
           resetTime: now + windowMs
         });
       }
-      
+
       return await handler(req, ...args);
     };
   };
